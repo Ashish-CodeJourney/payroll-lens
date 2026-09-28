@@ -1,4 +1,6 @@
 package com.acme.payrolllens.api;
 
-public record ApiError(String error, String message) {
+import java.util.Map;
+
+public record ApiError(String error, String message, Map<String, String> fieldErrors) {
 }

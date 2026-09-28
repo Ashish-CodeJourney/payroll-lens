@@ -48,3 +48,9 @@ The HTTP test `cd backend && mvn -q -Dtest=EmployeeApiTest test` first returned 
 Selected mutations: removing the page-size cap failed its API test, and removing the email search predicate failed the identity-search test. **Result:** 2 applied, 2 killed, 0 survived. Both were reverted before the final run.
 
 The first full-suite run exposed shared H2 state between the seed integration test and API tests: duplicate employee-number inserts failed even though each test class passed alone. A unique in-memory database name per Spring context removed that coupling; `mvn -q verify` then passed with all test classes together.
+
+## Employee creation API
+
+The new POST test first received 405 because no creation handler existed. A valid request then returned 201 and persisted its salary. The invalid-fields test failed its `fieldErrors` assertions until request validation and the 422 handler were added. A duplicate employee-number request failed the expected 409 contract before the conflict handler was added.
+
+Selected mutation: removing `@Valid` from the POST request caused the invalid-fields test to fail. **Result:** 1 applied, 1 killed, 0 survived. The annotation was restored.

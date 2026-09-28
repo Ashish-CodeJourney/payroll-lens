@@ -1,8 +1,13 @@
 package com.acme.payrolllens.employee;
 
+import jakarta.validation.Valid;
+import java.net.URI;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +34,12 @@ public class EmployeeController {
         return EmployeePage.from(repository.findAll(
                 EmployeeSpecifications.matching(query, country, department, level),
                 PageRequest.of(page, Math.min(size, 100), Sort.by("employeeNumber").ascending())));
+    }
+
+    @PostMapping
+    public ResponseEntity<EmployeeView> create(@Valid @RequestBody EmployeeInput input) {
+        Employee employee = repository.save(input.toEmployee());
+        return ResponseEntity.created(URI.create("/api/employees/" + employee.getId()))
+                .body(EmployeeView.from(employee));
     }
 }

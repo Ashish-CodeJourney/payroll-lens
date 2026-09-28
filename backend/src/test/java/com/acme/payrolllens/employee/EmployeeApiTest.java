@@ -1,12 +1,15 @@
 package com.acme.payrolllens.employee;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.acme.payrolllens.salary.AnnualSalary;
 import java.math.BigDecimal;
 import java.util.Currency;
+import org.springframework.http.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -94,5 +97,51 @@ class EmployeeApiTest {
         mockMvc.perform(get("/api/employees").param("size", "0"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void createsAnEmployeeWithCurrentAnnualSalary() throws Exception {
+        mockMvc.perform(post("/api/employees").contentType(MediaType.APPLICATION_JSON).content("""
+                        {"employeeNumber":"ACM-20001","fullName":"Priya Shah",
+                         "email":"priya.shah@example.com","countryCode":"IN",
+                         "department":"Engineering","jobTitle":"Software Engineer",
+                         "jobLevel":"L3","annualSalary":1200000.00,"currencyCode":"INR"}
+                        """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.employeeNumber").value("ACM-20001"))
+                .andExpect(jsonPath("$.currencyCode").value("INR"));
+
+        assertEquals("Priya Shah", repository.findByEmployeeNumber("ACM-20001").orElseThrow().getFullName());
+    }
+
+    @Test
+    void rejectsInvalidEmployeeFieldsBeforeSaving() throws Exception {
+        mockMvc.perform(post("/api/employees").contentType(MediaType.APPLICATION_JSON).content("""
+                        {"employeeNumber":"ACM-20002","fullName":" ",
+                         "email":"not-an-email","countryCode":"IN",
+                         "department":"Engineering","jobTitle":"Software Engineer",
+                         "jobLevel":"L3","annualSalary":0,"currencyCode":"INR"}
+                        """))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fieldErrors.fullName").exists())
+                .andExpect(jsonPath("$.fieldErrors.email").exists())
+                .andExpect(jsonPath("$.fieldErrors.annualSalary").exists());
+    }
+
+    @Test
+    void reportsDuplicateEmployeeIdentifiersAsConflict() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("85000.00"), Currency.getInstance("USD"));
+        repository.saveAndFlush(Employee.create("ACM-20003", "Alex Lee", "alex@example.com",
+                "US", "Engineering", "Software Engineer", "L2", salary));
+
+        mockMvc.perform(post("/api/employees").contentType(MediaType.APPLICATION_JSON).content("""
+                        {"employeeNumber":"ACM-20003","fullName":"Sam Lee",
+                         "email":"sam@example.com","countryCode":"US",
+                         "department":"Engineering","jobTitle":"Software Engineer",
+                         "jobLevel":"L2","annualSalary":90000.00,"currencyCode":"USD"}
+                        """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("CONFLICT"));
     }
 }
