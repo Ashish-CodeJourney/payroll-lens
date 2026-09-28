@@ -7,7 +7,7 @@ The first release is a single-HR-Manager workflow: find an employee, change thei
 | 1. Define product and workflow | Goal, exclusions, contract, and trunk/TDD rules are reviewable before code. | Complete; requirements were committed first. |
 | 2. Establish domain and persistence | Salary validation, unique employee identities, migration, and repeatable 10,000-row seed. | Complete; JUnit and database tests plus PostgreSQL seed smoke check. |
 | 3. Manage employees through API | Search, page, create, detail, edit, archive, and consistent errors. | Complete; HTTP integration tests and selected mutation checks. |
-| 4. Answer HR pay questions | Active population, median/distribution, totals and breakdowns with a stated USD rate snapshot. | Next backend slice; test calculation and filter consistency first. |
+| 4. Answer HR pay questions | Active population, median/distribution, totals and breakdowns with a stated USD rate snapshot. | Backend complete; API and calculator tests cover filter, exclusion, conversion, boundaries, and empty results. UI presentation remains pending. |
 | 5. Make workflow usable in Angular | Directory, detail/edit form, report view, currency formatting, and clear loading/error/empty states. | Pending; add component and service behavior tests before UI code. |
 | 6. Release and explain | CI, production build, deployed demo, short video, measured performance, and final reviewer instructions. | Pending; verify the deployed URL and video before claiming readiness. |
 

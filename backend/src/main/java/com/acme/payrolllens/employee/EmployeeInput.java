@@ -15,7 +15,8 @@ public record EmployeeInput(@NotBlank String employeeNumber, @NotBlank String fu
         @NotBlank String department, @NotBlank String jobTitle,
         @NotBlank @Pattern(regexp = "L[1-5]") String jobLevel,
         @NotNull @DecimalMin("0.01") @Digits(integer = 17, fraction = 2) BigDecimal annualSalary,
-        @NotBlank @Pattern(regexp = "[A-Z]{3}") String currencyCode) {
+        @NotBlank @Pattern(regexp = "USD|EUR|GBP|INR|CAD",
+                message = "must have a supported USD reporting rate") String currencyCode) {
     public Employee toEmployee() {
         return Employee.create(employeeNumber, fullName, email, countryCode,
                 department, jobTitle, jobLevel,

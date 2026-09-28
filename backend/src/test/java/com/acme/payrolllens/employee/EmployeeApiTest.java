@@ -136,6 +136,18 @@ class EmployeeApiTest {
     }
 
     @Test
+    void rejectsCurrencyWithoutAReportingRate() throws Exception {
+        mockMvc.perform(post("/api/employees").contentType(MediaType.APPLICATION_JSON).content("""
+                        {"employeeNumber":"ACM-20004","fullName":"Aki Sato",
+                         "email":"aki@example.com","countryCode":"JP",
+                         "department":"Engineering","jobTitle":"Engineer",
+                         "jobLevel":"L3","annualSalary":12000000.00,"currencyCode":"JPY"}
+                        """))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.fieldErrors.currencyCode").exists());
+    }
+
+    @Test
     void reportsDuplicateEmployeeIdentifiersAsConflict() throws Exception {
         AnnualSalary salary = new AnnualSalary(new BigDecimal("85000.00"), Currency.getInstance("USD"));
         repository.saveAndFlush(Employee.create("ACM-20003", "Alex Lee", "alex@example.com",

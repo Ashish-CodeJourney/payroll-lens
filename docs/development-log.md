@@ -68,3 +68,11 @@ The PUT behavior test first received 405, then passed after the update route cha
 `EmployeeApiTest#archivesAnEmployeeWithoutRemovingTheirRecord` first received 405 before the PATCH route existed, then passed after archiving persisted the status while retaining the record. `EmployeeApiTest#filtersActiveAndArchivedEmployees` initially returned both records for the active filter; the database predicate made ACTIVE, ARCHIVED, and ALL filters behave as requested.
 
 Selected mutation: changing the archive assignment from `true` to `false` failed the API assertion (`$.archived` expected true but was false). **Result:** 1 applied, 1 killed, 0 survived. The assignment was restored before the final suite.
+
+## Filtered salary analytics
+
+`AnalyticsApiTest#reportsActiveFilteredPayInDatedUsdAndCountryBreakdowns` first received 404 before the report route existed. The route now reports the filtered, active-only population with dated USD conversion, median, totals, breakdowns, and distribution bands. Focused calculator tests cover empty results, an even-size median, exact band boundaries, and an unsupported currency.
+
+Selected mutation: changing the EUR-to-USD factor from `1.10` to `1.00` failed the API test's expected total. **Result:** 1 applied, 1 killed, 0 survived. The rate was restored before full verification.
+
+A follow-up employee API test first accepted `JPY` (201), even though analytics had no fixed USD rate for it. Request validation now rejects unsupported currencies with a field-level 422 response, keeping every saved salary reportable.

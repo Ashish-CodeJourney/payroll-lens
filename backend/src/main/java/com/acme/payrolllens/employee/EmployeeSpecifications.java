@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Locale;
 import org.springframework.data.jpa.domain.Specification;
 
-final class EmployeeSpecifications {
+public final class EmployeeSpecifications {
     private EmployeeSpecifications() {
     }
 
-    static Specification<Employee> matching(String query, String country, String department,
+    public static Specification<Employee> matching(String query, String country, String department,
             String level, String status) {
         return (root, criteria, builder) -> {
             List<Predicate> conditions = new ArrayList<>();
