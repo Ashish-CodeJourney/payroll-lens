@@ -1,8 +1,10 @@
 # Payroll Lens
 
+[![CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/workflows/ci.yml/badge.svg)](https://github.com/Ashish-CodeJourney/payroll-lens/actions/workflows/ci.yml)
+
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, Angular workflow, local container deployment, CI configuration, and [demo video](docs/demo.mp4) are present. A public deployment URL and hosted CI run are still pending. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
+> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, Angular workflow, local container deployment, passing [hosted CI run](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36419505641), and [demo video](docs/demo.mp4) are present. A public deployment URL is still pending. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
 
 ## Try the current backend
 
@@ -40,7 +42,7 @@ The [short silent demo](docs/demo.mp4) shows a directory search, salary edit, an
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
 | Angular UI | Material directory, employee create/edit/archive form, and filtered salary reports. |
-| Deployment and demo | Local Compose stack and [video walkthrough](docs/demo.mp4) are verified. A public URL and hosted CI run are pending. |
+| Deployment and demo | Local Compose stack, [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36419505641), and [video walkthrough](docs/demo.mp4) are verified. A public URL is pending. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
 

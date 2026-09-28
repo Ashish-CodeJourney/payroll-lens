@@ -100,3 +100,5 @@ The first frontend container build failed during `npm ci`: the Linux Alpine depe
 ## Browser demo
 
 A Playwright-driven browser walkthrough exercises the deployed Angular flow against the seeded PostgreSQL instance: search for one employee, edit salary, and confirm the filtered report reflects the change. Its first recording timed out on an expected total before the UI had rendered the filtered response; the script now also asserts the persisted API value and report calculation, and waits for the visible total. The successful recording is committed as a short MP4. The script restores the original salary in a `finally` block, and a subsequent API read confirmed the original value. The database count remained 10,000.
+
+After the demo commit reached the public GitHub repository, hosted CI run `36419505641` passed both jobs: Spring Boot `mvn -B verify` and Angular clean install, tests, and production build. No public application host is configured yet.
