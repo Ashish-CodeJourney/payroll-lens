@@ -26,3 +26,9 @@ Manual mutation check against the changed value object:
 JaCoCo verification: run `cd backend && mvn -q verify`, then inspect `target/site/jacoco/jacoco.csv`. The `AnnualSalary` row has 26/26 instructions, 6/6 branches, 6/6 lines, and 1/1 method covered. The application bootstrap class is not exercised by these unit tests; a later startup/integration check must cover deployment wiring.
 
 AI assisted with initial planning, workflow rules, and test review. The tests were executed against the real Java implementation; failing and passing results were verified rather than accepted from generated suggestions.
+
+## Employee persistence and uniqueness
+
+`cd backend && mvn -q -Dtest=EmployeeRepositoryTest test` first failed to compile because the employee model and repository were absent. After the persistence test passed, it was strengthened to clear the JPA context before reloading the row. With the unique constraints absent, the duplicate employee-number and duplicate-email tests each failed because no exception was thrown. Each constraint was added only after its failing test.
+
+Selected mutation check: replacing the stored currency with a fixed `USD` in `Employee.getSalary()` caused the reload test to fail. The absent unique constraints were also observed as failing tests before implementation. **Result:** 3 selected changes, 3 detected, 0 survived. The fixed-currency mutation was reverted. `mvn -q verify` passed with the correct mapping and constraints.
