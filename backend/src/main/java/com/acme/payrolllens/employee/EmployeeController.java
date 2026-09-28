@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,5 +49,13 @@ public class EmployeeController {
     public EmployeeView get(@PathVariable Long id) {
         return EmployeeView.from(repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id)));
+    }
+
+    @PutMapping("/{id}")
+    public EmployeeView update(@PathVariable Long id, @Valid @RequestBody EmployeeInput input) {
+        Employee employee = repository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+        input.applyTo(employee);
+        return EmployeeView.from(repository.save(employee));
     }
 }

@@ -21,4 +21,9 @@ public record EmployeeInput(@NotBlank String employeeNumber, @NotBlank String fu
                 department, jobTitle, jobLevel,
                 new AnnualSalary(annualSalary, Currency.getInstance(currencyCode)));
     }
+
+    public void applyTo(Employee employee) {
+        employee.update(employeeNumber, fullName, email, countryCode, department,
+                jobTitle, jobLevel, new AnnualSalary(annualSalary, Currency.getInstance(currencyCode)));
+    }
 }

@@ -70,6 +70,20 @@ public class Employee {
                 jobTitle, jobLevel, salary);
     }
 
+    public void update(String employeeNumber, String fullName, String email,
+            String countryCode, String department, String jobTitle, String jobLevel,
+            AnnualSalary salary) {
+        this.employeeNumber = employeeNumber;
+        this.fullName = fullName;
+        this.email = email;
+        this.countryCode = countryCode;
+        this.department = department;
+        this.jobTitle = jobTitle;
+        this.jobLevel = jobLevel;
+        this.annualSalary = salary.amount();
+        this.currencyCode = salary.currency().getCurrencyCode();
+    }
+
     public Long getId() { return id; }
     public String getEmployeeNumber() { return employeeNumber; }
     public String getFullName() { return fullName; }

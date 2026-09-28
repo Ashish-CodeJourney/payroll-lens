@@ -58,3 +58,7 @@ Selected mutation: removing `@Valid` from the POST request caused the invalid-fi
 ## Employee detail API
 
 `EmployeeApiTest#returnsOneEmployeeById` first received 404 while no detail route existed, then passed after the route returned the saved employee. A missing-employee test then failed because the 404 response lacked the standard JSON error; a typed not-found exception and handler supplied it. Changing that handler's HTTP status from 404 to 400 caused the missing-employee test to fail. **Result:** 1 selected mutation applied, 1 killed, 0 survived; the correct status was restored.
+
+## Employee editing API
+
+The PUT behavior test first received 405, then passed after the update route changed both profile and current salary. The test flushes and clears the persistence context before reading the record again. Removing the salary assignment from the update method made the test fail; it was restored. **Result:** 1 selected mutation applied, 1 killed, 0 survived.

@@ -3,10 +3,12 @@ package com.acme.payrolllens.employee;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.acme.payrolllens.salary.AnnualSalary;
+import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.Currency;
 import org.springframework.http.MediaType;
@@ -28,6 +30,9 @@ class EmployeeApiTest {
 
     @Autowired
     private EmployeeRepository repository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     void returnsAStablePageOfEmployees() throws Exception {
@@ -163,5 +168,29 @@ class EmployeeApiTest {
         mockMvc.perform(get("/api/employees/999999"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("NOT_FOUND"));
+    }
+
+    @Test
+    void updatesEmployeeProfileAndCurrentSalary() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("75000.00"), Currency.getInstance("USD"));
+        Employee employee = repository.saveAndFlush(Employee.create("ACM-30002", "Alex Lee",
+                "alex.lee@example.com", "US", "Sales", "Account Executive", "L2", salary));
+
+        mockMvc.perform(put("/api/employees/{id}", employee.getId()).contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"employeeNumber":"ACM-30002","fullName":"Alex Morgan",
+                                 "email":"alex.morgan@example.com","countryCode":"US",
+                                 "department":"Engineering","jobTitle":"Software Engineer",
+                                 "jobLevel":"L3","annualSalary":110000.00,"currencyCode":"USD"}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fullName").value("Alex Morgan"))
+                .andExpect(jsonPath("$.annualSalary").value(110000.00));
+
+        entityManager.flush();
+        entityManager.clear();
+        mockMvc.perform(get("/api/employees/{id}", employee.getId()))
+                .andExpect(jsonPath("$.department").value("Engineering"))
+                .andExpect(jsonPath("$.annualSalary").value(110000.00));
     }
 }
