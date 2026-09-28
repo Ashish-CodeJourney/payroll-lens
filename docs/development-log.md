@@ -118,3 +118,9 @@ This setup-only increment adds documented targets for local startup, seeding, Po
 The updated API image was started behind the existing Nginx container. Before the proxy change was activated, `/v3/api-docs` on the web port returned Angular HTML; after restarting the rebuilt web image it returned JSON. `/swagger-ui.html` served HTML, its configuration endpoint served JSON, and the proxied health check remained UP.
 
 Final `make test` passed 30 backend and 7 frontend tests. Both container images built, `nginx -t` passed, and the directory still returned 10,000 total records when archived employees were included.
+
+## Responsive UI alignment
+
+A browser-level layout check was added before the styling changes and run against the existing containerized UI. Its first RED result found the employee search field above the adjacent country filter. Further focused RED checks found the navigation left edge displaced from the page heading, inconsistent search and filter fonts, a broken Level/Status row at 768px, and horizontal page overflow on the mobile reports page after data loaded. The `aria-label` on employee search was retained after an existing Angular interaction test exposed its accidental removal.
+
+The GREEN implementation shares filter dimensions and grid rules across directory and reports, aligns the header with the page container, uses one system font across native and Material controls, and confines wide report tables to their own scrollable cards. `make test-layout` passed at 1440px, 768px, and 390px; a manual browser sweep also found no page overflow at 320px, 360px, and 1024px on directory, reports, and employee form routes. The 7 Angular interaction tests passed after the markup change. The refreshed video passed its browser workflow and restored employee `ACM-00006` to USD 58,300, confirmed by an API read. These changes affect presentation and the demo script, not salary business logic, so no business-logic mutation was applicable.

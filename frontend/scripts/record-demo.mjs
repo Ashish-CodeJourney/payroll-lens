@@ -8,9 +8,14 @@ import { chromium } from 'playwright-core';
 const baseUrl = process.env.DEMO_BASE_URL ?? 'http://localhost:8088';
 const output = resolve('../docs/demo.mp4');
 const chrome = process.env.CHROME_PATH ?? '/usr/bin/google-chrome';
-const originalResponse = await fetch(`${baseUrl}/api/employees/1`);
-assert.equal(originalResponse.status, 200, 'Demo employee must exist');
-const original = await originalResponse.json();
+const employeeResponse = await fetch(`${baseUrl}/api/employees?size=1`);
+assert.equal(employeeResponse.status, 200, 'Employee directory must be available');
+const employeePage = await employeeResponse.json();
+const usdResponse = await fetch(`${baseUrl}/api/employees?size=100&country=US`);
+assert.equal(usdResponse.status, 200, 'US employee directory must be available');
+const usdPage = await usdResponse.json();
+const original = usdPage.items.find((employee) => employee.currencyCode === 'USD');
+assert.ok(original, 'Demo needs an active USD employee');
 const changedSalary = Number(original.annualSalary) + 1000;
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'payroll-lens-demo-'));
 let browser;
@@ -24,7 +29,7 @@ try {
     recordVideo: { dir: temporaryDirectory, size: { width: 1440, height: 900 } } });
   const page = await context.newPage();
   await page.goto(`${baseUrl}/employees`);
-  await page.getByText('10000 employees').waitFor();
+  await page.getByText(`${employeePage.totalElements} employees`).waitFor();
   await page.waitForTimeout(1800);
 
   await page.getByRole('textbox', { name: 'Search employees' }).fill(original.employeeNumber);
@@ -42,8 +47,12 @@ try {
 
   await page.getByRole('link', { name: 'Reports' }).click();
   await page.getByRole('heading', { name: 'Salary reports' }).waitFor();
+  await page.locator('.metrics').waitFor();
   await page.getByRole('textbox', { name: 'Search employees' }).fill(original.employeeNumber);
+  const reportResponse = page.waitForResponse((response) =>
+    response.url().includes(`/api/analytics?query=${original.employeeNumber}`) && response.status() === 200);
   await page.getByRole('button', { name: 'Apply filters' }).click();
+  await reportResponse;
   await page.getByText('Fixed rate date: 2026-01-01').waitFor();
   const filteredReport = await (await fetch(`${baseUrl}/api/analytics?query=${original.employeeNumber}`)).json();
   assert.equal(filteredReport.headcount, 1, 'Filtered report must have one employee');

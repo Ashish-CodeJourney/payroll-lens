@@ -13,6 +13,8 @@
 | No authentication in demo | The brief allows one HR Manager, and all records are synthetic. This build must not hold real salaries; access control is required before any real use. |
 | Owner-managed VPS release | The owner chose to publish the verified Compose stack on a VPS. The web and database ports bind to loopback, and a host reverse proxy terminates HTTPS. This keeps the submission independent of a third-party free tier and leaves the public URL under the owner's control. |
 | Generated OpenAPI and Swagger UI | Reviewers can inspect and try the actual backend contract without maintaining a second machine-readable specification. Springdoc 2.8.17 matches Spring Boot 3.5; Nginx proxies the docs on the same origin as Angular. The reference is intentionally public for this synthetic, no-auth demo and must be restricted alongside the API before real salary data is used. |
+| Shared native filter controls | Search and select controls use one explicit height, label treatment, and responsive grid on directory and reports. This avoids relying on Angular Material's different form-field inset and height while preserving accessible labels and Material for navigation, cards, and buttons. |
+| Scrollable report cards on narrow screens | Breakdown tables retain their columns and scroll inside their cards. This keeps the page itself within a phone viewport without truncating pay figures. |
 
 ## Capacity and verification
 

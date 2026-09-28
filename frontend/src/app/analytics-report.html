@@ -2,12 +2,12 @@
   <p>Current annual base pay for active employees. Totals use fixed USD exchange rates.</p></header>
 
 <mat-card class="filter-card"><mat-card-content>
-  <form (submit)="$event.preventDefault(); load()">
-    <mat-form-field appearance="outline"><mat-label>Search employees</mat-label><input matInput aria-label="Search employees" [value]="query" (input)="query = $any($event.target).value"></mat-form-field>
-    <label>Country <input aria-label="Filter by country" [value]="country" (input)="country = $any($event.target).value" placeholder="e.g. US"></label>
-    <label>Department <input aria-label="Filter by department" [value]="department" (input)="department = $any($event.target).value" placeholder="e.g. Engineering"></label>
-    <label>Level <input aria-label="Filter by level" [value]="level" (input)="level = $any($event.target).value" placeholder="e.g. L3"></label>
-    <button mat-flat-button type="submit">Apply filters</button>
+  <form class="filter-grid filter-grid--reports" (submit)="$event.preventDefault(); load()">
+    <label class="filter-field filter-field--search"><span>Search employees</span><input aria-label="Search employees" [value]="query" (input)="query = $any($event.target).value" placeholder="Name, email or ID"></label>
+    <label class="filter-field"><span>Country</span><input aria-label="Filter by country" [value]="country" (input)="country = $any($event.target).value" placeholder="e.g. US"></label>
+    <label class="filter-field"><span>Department</span><input aria-label="Filter by department" [value]="department" (input)="department = $any($event.target).value" placeholder="e.g. Engineering"></label>
+    <label class="filter-field"><span>Level</span><input aria-label="Filter by level" [value]="level" (input)="level = $any($event.target).value" placeholder="e.g. L3"></label>
+    <button class="filter-submit" mat-flat-button type="submit">Apply filters</button>
   </form>
 </mat-card-content></mat-card>
 

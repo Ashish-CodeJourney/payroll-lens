@@ -1,7 +1,7 @@
 <a mat-button routerLink="/employees">← Back to employees</a>
 <header><p class="eyebrow">People &amp; pay</p><h2>{{ id ? 'Employee details' : 'Add employee' }}</h2>
 <p>Manage the current annual gross base salary. Values are stored in local currency.</p></header>
-<mat-card><mat-card-content>
+<mat-card class="form-card"><mat-card-content>
   @if (busy()) { <p role="status">Working…</p> }
   @if (message()) { <p class="success" role="status">{{ message() }}</p> }
   @if (error()) { <p class="error" role="alert">{{ error() }}</p> }

@@ -7,24 +7,23 @@
   <a mat-flat-button routerLink="/employees/new">Add employee</a>
 </section>
 
-<mat-card>
+<mat-card class="directory-card">
   <mat-card-content>
-    <form class="filters" (submit)="$event.preventDefault(); search()">
-      <mat-form-field appearance="outline">
-        <mat-label>Search employees</mat-label>
-        <input matInput aria-label="Search employees" [value]="query" (input)="query = $any($event.target).value" placeholder="Name, email or employee number">
-      </mat-form-field>
-      <label>Country <input [value]="country" (input)="country = $any($event.target).value" placeholder="e.g. US"></label>
-      <label>Department <input [value]="department" (input)="department = $any($event.target).value" placeholder="e.g. Engineering"></label>
-      <label>Level <input [value]="level" (input)="level = $any($event.target).value" placeholder="e.g. L3"></label>
-      <label>Status <select [value]="status" (change)="status = $any($event.target).value"><option value="ACTIVE">Active</option><option value="ARCHIVED">Archived</option><option value="ALL">All</option></select></label>
-      <button mat-flat-button type="submit">Apply filters</button>
+    <form class="filter-grid" (submit)="$event.preventDefault(); search()">
+      <label class="filter-field filter-field--search"><span>Search employees</span>
+        <input type="text" aria-label="Search employees" [value]="query" (input)="query = $any($event.target).value" placeholder="Name, email or ID">
+      </label>
+      <label class="filter-field"><span>Country</span><input [value]="country" (input)="country = $any($event.target).value" placeholder="e.g. US"></label>
+      <label class="filter-field"><span>Department</span><input [value]="department" (input)="department = $any($event.target).value" placeholder="e.g. Engineering"></label>
+      <label class="filter-field"><span>Level</span><input [value]="level" (input)="level = $any($event.target).value" placeholder="e.g. L3"></label>
+      <label class="filter-field"><span>Status</span><select [value]="status" (change)="status = $any($event.target).value"><option value="ACTIVE">Active</option><option value="ARCHIVED">Archived</option><option value="ALL">All</option></select></label>
+      <button class="filter-submit" mat-flat-button type="submit">Apply filters</button>
     </form>
 
     @if (loading()) { <p role="status">Loading employees…</p> }
     @if (error()) { <p role="alert">{{ error() }}</p> <button mat-button type="button" (click)="search()">Retry</button> }
     @if (data(); as result) {
-      <p class="count">{{ result.totalElements }} employees</p>
+      <p class="count"><strong>{{ result.totalElements }}</strong> employees</p>
       @if (result.items.length === 0 && !loading()) { <p>No employees found</p> }
       @if (result.items.length > 0) {
         <div class="table-scroll">
@@ -35,8 +34,8 @@
                 <tr>
                   <td><a [routerLink]="['/employees', employee.id]">{{ employee.fullName }}</a><small>{{ employee.employeeNumber }}</small></td>
                   <td>{{ employee.countryCode }}</td><td>{{ employee.department }}</td><td>{{ employee.jobLevel }}</td>
-                  <td>{{ formatMoney(employee.annualSalary, employee.currencyCode) }}</td>
-                  <td>{{ employee.archived ? 'Archived' : 'Active' }}</td>
+                  <td class="salary-cell">{{ formatMoney(employee.annualSalary, employee.currencyCode) }}</td>
+                  <td><span class="status-badge" [class.is-archived]="employee.archived">{{ employee.archived ? 'Archived' : 'Active' }}</span></td>
                 </tr>
               }
             </tbody>

@@ -1,9 +1,15 @@
-header { margin: 1rem 0 1.5rem; }
-h2 { font-size: 2rem; margin: .25rem 0; }
-.eyebrow { color: #536c91; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
-.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem 1rem; }
-.currency { display: grid; align-content: start; gap: .5rem; color: #52647b; }
-.currency select { min-height: 3.5rem; border: 1px solid #a8b7ca; border-radius: 4px; padding: .75rem; background: white; }
-.actions { display: flex; align-items: center; gap: .75rem; margin-top: 1rem; }
-.success { color: #176b47; }.error { color: #b42318; }
+header { margin: 24px 0 28px; }
+header p:last-child { margin: 8px 0 0; color: var(--muted); }
+h2 { font-size: clamp(2rem, 3vw, 2.5rem); letter-spacing: -.035em; margin: 4px 0; }
+.eyebrow { margin: 0; color: var(--brand); font-size: .75rem; font-weight: 750; text-transform: uppercase; letter-spacing: .14em; }
+.form-card { max-width: 980px; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
+.fields mat-form-field { min-width: 0; }
+.currency { display: grid; align-content: start; gap: 8px; color: #465974; font-size: .82rem; font-weight: 600; }
+.currency select { min-height: 56px; border: 1px solid #c7d2e2; border-radius: 10px; padding: 0 14px; color: var(--ink); background: white; }
+.currency select:focus-visible { outline: 3px solid rgba(25, 95, 189, .2); border-color: var(--brand); }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.actions button { min-height: 44px; }
+.success { color: #176b47; }
+.error { color: #b42318; }
 @media (max-width: 700px) { .fields { grid-template-columns: 1fr; } }

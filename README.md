@@ -18,7 +18,7 @@ Open `http://localhost:8088`. The web container serves Angular and proxies `/api
 
 Review the interactive API reference at `http://localhost:8088/swagger-ui.html` or fetch its OpenAPI JSON at `http://localhost:8088/v3/api-docs`. Both are served through the same web port as Angular. The reference documents employee management and active-pay reports; the [API contract](docs/api-contract.md) explains error and currency semantics in prose.
 
-Run `make help` for all commands. Common follow-ups are `make health`, `make logs`, `make stop`, `make db-shell`, `make db-backup`, `make test`, and `make build`. Use `make rebuild` after source changes to refresh the container images. `make db-backup BACKUP_FILE=backup.dump` refuses to overwrite an existing dump. `make stop` preserves the database volume.
+Run `make help` for all commands. Common follow-ups are `make health`, `make logs`, `make stop`, `make db-shell`, `make db-backup`, `make test`, and `make build`. Use `make rebuild` after source changes to refresh the container images. `make test-layout` checks the running web app at desktop, tablet, and mobile widths; it requires Chrome and the frontend dependencies. `make db-backup BACKUP_FILE=backup.dump` refuses to overwrite an existing dump. `make stop` preserves the database volume.
 
 Check the running stack:
 
@@ -45,7 +45,7 @@ The [short silent demo](docs/demo.mp4) shows a directory search, salary edit, an
 | Directory | Server-side search, country/department/level/status filters, and pages capped at 100 records. |
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
-| Angular UI | Material directory, employee create/edit/archive form, and filtered salary reports. |
+| Angular UI | Responsive directory, employee create/edit/archive form, and filtered salary reports, with Angular Material navigation and cards. |
 | Deployment and demo | Local Compose stack, [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36419505641), and [video walkthrough](docs/demo.mp4) are verified. [VPS instructions](docs/vps-deployment.md) are ready for the owner to publish the URL. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
@@ -56,6 +56,7 @@ Money is stored as annual gross base pay in each employee's local currency. Cros
 make install-frontend
 make test
 make build
+make test-layout # after starting the web app
 ```
 
 Backend tests currently cover salary rules, persistence and uniqueness, seeding, employee HTTP behavior, and filtered analytics. The frontend tests cover navigation, directory, employee form, and report interactions. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.

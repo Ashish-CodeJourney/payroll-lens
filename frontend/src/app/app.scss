@@ -1,5 +1,17 @@
 :host { display: block; min-height: 100vh; }
-.topbar { padding-inline: 2rem; }
-h1 { font-size: 1.25rem; font-weight: 700; margin: 0; }
+.topbar { height: 72px; padding: 0; background: #fff; border-bottom: 1px solid var(--line); box-shadow: none; }
+.topbar-inner { display: flex; align-items: center; width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+.topbar .topbar-inner h1 { margin: 0; color: var(--ink); font-family: var(--ui-font); font-size: 1.15rem; font-weight: 800; letter-spacing: -.025em; }
 .spacer { flex: 1; }
-main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+nav { display: flex; align-items: center; gap: 8px; }
+nav a { color: #445875; font-size: .88rem; font-weight: 650; }
+nav a:hover { background: #eff5ff; color: var(--brand); }
+main { max-width: 1280px; margin: 0 auto; padding: 38px 32px 72px; }
+@media (max-width: 640px) {
+  .topbar { height: 64px; }
+  .topbar-inner { padding-inline: 16px; }
+  .topbar .topbar-inner h1 { font-size: 1rem; }
+  nav { gap: 0; }
+  nav a { padding-inline: 8px; }
+  main { padding: 28px 16px 56px; }
+}

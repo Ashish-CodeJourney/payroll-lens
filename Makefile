@@ -7,7 +7,7 @@ WEB_PORT ?= 8088
 .DEFAULT_GOAL := help
 .PHONY: help run up rebuild stop logs ps health seed db-up db-status db-shell db-backup \
 	dev-backend dev-frontend install-frontend test test-backend test-frontend \
-	build build-backend build-frontend
+	build build-backend build-frontend test-layout
 
 help: ## Show available commands
 	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z0-9_-]+:.*## / { printf "%-19s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -70,6 +70,9 @@ test-backend: ## Run JUnit and integration tests with JaCoCo
 
 test-frontend: ## Run Angular tests once
 	$(NPM) test -- --watch=false
+
+test-layout: ## Check live desktop/mobile alignment (run the app first)
+	$(NPM) run test:layout
 
 build: build-backend build-frontend ## Build backend and frontend
 
