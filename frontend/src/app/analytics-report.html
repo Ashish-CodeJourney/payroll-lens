@@ -1,0 +1,39 @@
+<header><p class="eyebrow">Pay intelligence</p><h2>Salary reports</h2>
+  <p>Current annual base pay for active employees. Totals use fixed USD exchange rates.</p></header>
+
+<mat-card class="filter-card"><mat-card-content>
+  <form (submit)="$event.preventDefault(); load()">
+    <mat-form-field appearance="outline"><mat-label>Search employees</mat-label><input matInput aria-label="Search employees" [value]="query" (input)="query = $any($event.target).value"></mat-form-field>
+    <label>Country <input aria-label="Filter by country" [value]="country" (input)="country = $any($event.target).value" placeholder="e.g. US"></label>
+    <label>Department <input aria-label="Filter by department" [value]="department" (input)="department = $any($event.target).value" placeholder="e.g. Engineering"></label>
+    <label>Level <input aria-label="Filter by level" [value]="level" (input)="level = $any($event.target).value" placeholder="e.g. L3"></label>
+    <button mat-flat-button type="submit">Apply filters</button>
+  </form>
+</mat-card-content></mat-card>
+
+@if (loading()) { <p role="status">Loading report…</p> }
+@if (error()) { <p role="alert">{{ error() }}</p><button mat-button (click)="load()">Retry</button> }
+@if (report(); as data) {
+  <p class="basis">Reporting currency: {{ data.reportingCurrency }} · Fixed rate date: {{ data.rateDate }} · Active employees only</p>
+  <div class="metrics">
+    <mat-card><mat-card-content><span>Headcount</span><strong>{{ data.headcount }}</strong></mat-card-content></mat-card>
+    <mat-card><mat-card-content><span>Annual base-pay total</span><strong>{{ usd(data.annualTotalUsd) }}</strong></mat-card-content></mat-card>
+    <mat-card><mat-card-content><span>Median annual base pay</span><strong>{{ usd(data.medianAnnualUsd) }}</strong></mat-card-content></mat-card>
+  </div>
+  @if (data.headcount === 0) { <p>No active employees match these filters.</p> }
+  <div class="panels">
+    <mat-card><mat-card-content><h3>Salary distribution</h3>
+      @for (band of data.distribution; track band.label) {
+        <div class="band"><span>{{ band.label }}</span><div class="track"><div class="fill" [style.width.%]="share(band.headcount, data.headcount)"></div></div><strong>{{ band.headcount }}</strong></div>
+      }
+    </mat-card-content></mat-card>
+    @for (group of [{ title: 'By country', field: 'byCountry' }, { title: 'By department', field: 'byDepartment' }, { title: 'By level', field: 'byLevel' }]; track group.field) {
+      <mat-card><mat-card-content><h3>{{ group.title }}</h3>
+        <div class="table-scroll"><table><thead><tr><th>Group</th><th>People</th><th>Annual total USD</th><th>Median USD</th></tr></thead>
+          <tbody>@for (row of rows(data, $any(group.field)); track row.label) {
+            <tr><td>{{ row.label }}</td><td>{{ row.headcount }}</td><td>{{ usd(row.annualTotalUsd) }}</td><td>{{ usd(row.medianAnnualUsd) }}</td></tr>
+          }</tbody></table></div>
+      </mat-card-content></mat-card>
+    }
+  </div>
+}

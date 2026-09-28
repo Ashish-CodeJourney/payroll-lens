@@ -2,7 +2,7 @@
 
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Assessment status:** The Spring Boot employee API, filtered salary analytics, PostgreSQL schema, deterministic 10,000-record seed, and backend tests are implemented. The Angular directory and employee form are usable; report screens, CI, public deployment, and video demo are still in progress. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
+> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, and Angular directory, employee form, and reports are implemented. CI, public deployment, and video demo are still in progress. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
 
 ## Try the current backend
 
@@ -21,7 +21,7 @@ curl 'http://localhost:8080/api/employees?query=ACM-00001&size=10'
 curl 'http://localhost:8080/actuator/health'
 ```
 
-The Angular app can be started separately with `cd frontend && npm ci && npm start`, then opened at `http://localhost:4200`. The development server proxies `/api` to the backend. The directory supports search, filters, paging, and local-currency display. Select an employee to change salary or archive the record, or use **Add employee** to create one. The report screen is still in progress. The same archive action is available through the API:
+The Angular app can be started separately with `cd frontend && npm ci && npm start`, then opened at `http://localhost:4200`. The development server proxies `/api` to the backend. The directory supports search, filters, paging, and local-currency display. Select an employee to change salary or archive the record, or use **Add employee** to create one. **Reports** answers pay questions for the active, filtered population. The same archive action is available through the API:
 
 ```sh
 curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
@@ -35,7 +35,7 @@ curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 | Directory | Server-side search, country/department/level/status filters, and pages capped at 100 records. |
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
-| Angular UI | Material directory and employee create/edit/archive form; report screen is next. |
+| Angular UI | Material directory, employee create/edit/archive form, and filtered salary reports. |
 | Deployment and demo | Planned after the end-to-end workflow is complete. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
@@ -48,7 +48,7 @@ cd frontend && npm ci && npm test -- --watch=false
 cd frontend && npm run build
 ```
 
-Backend tests currently cover salary rules, persistence and uniqueness, seeding, employee HTTP behavior, and filtered analytics. The frontend tests cover navigation, directory, and employee form interactions. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.
+Backend tests currently cover salary rules, persistence and uniqueness, seeding, employee HTTP behavior, and filtered analytics. The frontend tests cover navigation, directory, employee form, and report interactions. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.
 
 ## Reviewer map
 

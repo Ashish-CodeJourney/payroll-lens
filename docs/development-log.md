@@ -88,3 +88,7 @@ The first directory test failed to compile because the component did not exist. 
 ## Angular employee form
 
 The edit-workflow test initially failed to compile because the form component did not exist. The implementation now loads one record, submits a changed annual salary through PUT, and reports success. Additional interaction tests cover creating an employee through POST and archiving an existing employee through PATCH. Selected mutation: replacing the submitted salary with zero failed both the create and edit payload assertions. **Result:** 1 applied, 1 killed, 0 survived. The proper value conversion was restored.
+
+## Angular salary reports
+
+The report-screen test first failed to compile because the component did not exist. The implementation displays a labelled fixed-rate USD total, median, headcount, distribution, and country/department/level tables. The test observes the displayed rate date and sends a department-filtered request. Selected mutation: dropping the department parameter made the test fail because the filtered request was absent. **Result:** 1 applied, 1 killed, 0 survived. The parameter was restored before final verification.
