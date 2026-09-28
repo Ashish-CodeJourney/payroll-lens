@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/payroll_lens}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/payroll_lens}
     username: ${DATABASE_USER:payroll_lens}
     password: ${DATABASE_PASSWORD:payroll_lens}
   jpa:

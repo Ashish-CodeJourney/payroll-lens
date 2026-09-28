@@ -32,3 +32,11 @@ AI assisted with initial planning, workflow rules, and test review. The tests we
 `cd backend && mvn -q -Dtest=EmployeeRepositoryTest test` first failed to compile because the employee model and repository were absent. After the persistence test passed, it was strengthened to clear the JPA context before reloading the row. With the unique constraints absent, the duplicate employee-number and duplicate-email tests each failed because no exception was thrown. Each constraint was added only after its failing test.
 
 Selected mutation check: replacing the stored currency with a fixed `USD` in `Employee.getSalary()` caused the reload test to fail. The absent unique constraints were also observed as failing tests before implementation. **Result:** 3 selected changes, 3 detected, 0 survived. The fixed-currency mutation was reverted. `mvn -q verify` passed with the correct mapping and constraints.
+
+## Deterministic 10,000-employee seed
+
+`cd backend && mvn -q -Dtest=SeedEmployeesTest test` initially failed to compile because the generator did not exist. The generator test then passed with exactly 10,000 distinct employee numbers and emails, five countries with matching currencies, five departments, positive salaries, and identical output on repeat calls. `SeedServiceTest` initially failed to compile because the database seeder did not exist; after implementation, it verified 10,000 inserted rows and zero new rows on a second call.
+
+Selected mutations: generating 9,999 instead of 10,000 records failed the count assertion; setting every currency to `USD` failed the country/currency assertion. **Result:** 2 applied, 2 killed, 0 survived. Both mutations were reverted. The seed script was also run against local PostgreSQL, and `SELECT COUNT(*) FROM employees` returned `10000`.
+
+`mvn -q verify` passes. Its JaCoCo report covers every line of the generator and batch insertion service, with one branch in the service still uncovered. The command-line runner is exercised by the PostgreSQL smoke check, though that separate process is not reflected in the unit-test coverage report. Coverage is reported per class rather than claimed to be 100% overall.
