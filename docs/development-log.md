@@ -84,3 +84,7 @@ The shell test first rendered the Angular generator's `Hello, frontend` title in
 ## Angular employee directory
 
 The first directory test failed to compile because the component did not exist. With the component and HTTP client in place, it verified a 25-record page request, a visible local-currency salary, a new search request, and an empty-result message. The initial run also exposed a missing router provider in the test fixture, which was added. Selected mutation: removing the search query from the API call made the test fail because no matching filtered request was sent. **Result:** 1 applied, 1 killed, 0 survived. The query was restored before final verification.
+
+## Angular employee form
+
+The edit-workflow test initially failed to compile because the form component did not exist. The implementation now loads one record, submits a changed annual salary through PUT, and reports success. Additional interaction tests cover creating an employee through POST and archiving an existing employee through PATCH. Selected mutation: replacing the submitted salary with zero failed both the create and edit payload assertions. **Result:** 1 applied, 1 killed, 0 survived. The proper value conversion was restored.

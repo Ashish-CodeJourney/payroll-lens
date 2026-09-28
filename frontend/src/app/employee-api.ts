@@ -34,6 +34,8 @@ export interface EmployeeFilters {
   status?: string;
 }
 
+export type EmployeeInput = Omit<Employee, 'id' | 'archived'>;
+
 @Injectable({ providedIn: 'root' })
 export class EmployeeApi {
   private readonly http = inject(HttpClient);
@@ -45,5 +47,21 @@ export class EmployeeApi {
       if (value) params = params.set(key, value);
     }
     return this.http.get<EmployeePage>('/api/employees', { params });
+  }
+
+  get(id: number): Observable<Employee> {
+    return this.http.get<Employee>(`/api/employees/${id}`);
+  }
+
+  create(input: EmployeeInput): Observable<Employee> {
+    return this.http.post<Employee>('/api/employees', input);
+  }
+
+  update(id: number, input: EmployeeInput): Observable<Employee> {
+    return this.http.put<Employee>(`/api/employees/${id}`, input);
+  }
+
+  archive(id: number): Observable<Employee> {
+    return this.http.patch<Employee>(`/api/employees/${id}/archive`, {});
   }
 }

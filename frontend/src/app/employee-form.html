@@ -1,0 +1,30 @@
+<a mat-button routerLink="/employees">← Back to employees</a>
+<header><p class="eyebrow">People &amp; pay</p><h2>{{ id ? 'Employee details' : 'Add employee' }}</h2>
+<p>Manage the current annual gross base salary. Values are stored in local currency.</p></header>
+<mat-card><mat-card-content>
+  @if (busy()) { <p role="status">Working…</p> }
+  @if (message()) { <p class="success" role="status">{{ message() }}</p> }
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="fields">
+      <mat-form-field appearance="outline"><mat-label>Employee number</mat-label><input matInput formControlName="employeeNumber" aria-label="Employee number"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Full name</mat-label><input matInput formControlName="fullName" aria-label="Full name"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Work email</mat-label><input matInput formControlName="email" aria-label="Work email" type="email"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Country code</mat-label><input matInput formControlName="countryCode" aria-label="Country code" maxlength="2"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Department</mat-label><input matInput formControlName="department" aria-label="Department"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Job title</mat-label><input matInput formControlName="jobTitle" aria-label="Job title"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Job level</mat-label><input matInput formControlName="jobLevel" aria-label="Job level" placeholder="L1–L5"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Annual salary</mat-label><input matInput formControlName="annualSalary" aria-label="Annual salary" type="number" min="0.01" step="0.01"></mat-form-field>
+      <label class="currency">Currency
+        <select formControlName="currencyCode" aria-label="Currency">
+          <option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="INR">INR</option><option value="CAD">CAD</option>
+        </select>
+      </label>
+    </div>
+    <div class="actions">
+      <button mat-flat-button type="submit" [disabled]="busy() || archived()">{{ id ? 'Save changes' : 'Create employee' }}</button>
+      @if (id && !archived()) { <button mat-button type="button" [disabled]="busy()" (click)="archive()">Archive employee</button> }
+      @if (archived()) { <span>Archived employee</span> }
+    </div>
+  </form>
+</mat-card-content></mat-card>
