@@ -106,3 +106,7 @@ After the demo commit reached the public GitHub repository, hosted CI run `36419
 ## VPS handoff
 
 The owner chose to self-host the public demo. The previously tested Compose stack remains the release path; its web port is now bound to localhost for a host HTTPS reverse proxy. A VPS guide and Caddyfile example document first start, deterministic seed, smoke checks, updates, and database backup. An unfinished experiment to bundle Angular inside Spring Boot for a managed free host was removed before commit, preserving the tested three-service architecture.
+
+## Makefile workflow
+
+This setup-only increment adds documented targets for local startup, seeding, PostgreSQL access and backup, development servers, tests, and builds. No artificial behavior test was added. `make test` passed 28 backend and 7 frontend tests; `make build` packaged Spring Boot and built Angular. `make run` restarted the existing local images and reran the idempotent seed; the proxied health check returned `UP` and the employee API still reported 10,000 records. `make db-status` passed, and `make db-backup` produced a PostgreSQL custom-format dump while a second attempt correctly refused to overwrite it. A forced `--build` check could not reach Docker Hub for base-image metadata in this environment, so `make rebuild` remains available for hosts with registry access.

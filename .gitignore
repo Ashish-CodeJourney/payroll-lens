@@ -10,4 +10,5 @@ target/
 .gradle/
 build/
 *.log
+*.dump
 .angular/

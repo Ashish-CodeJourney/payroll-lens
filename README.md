@@ -11,11 +11,12 @@ Payroll Lens is an HR Manager application for maintaining ACME's current annual 
 With Docker and Compose installed, run from the repository root:
 
 ```sh
-docker compose up --build -d db api web
-docker compose run --rm seed
+make run
 ```
 
 Open `http://localhost:8088`. The web container serves Angular and proxies `/api` to Spring Boot. The database is mapped to localhost port `5433` and is not exposed publicly. Flyway applies the schema on startup. The seed command inserts the same 10,000 synthetic employees once and leaves existing rows intact on reruns. `WEB_PORT` can change the web host port; `POSTGRES_PASSWORD` can override the local demo default. For a public demo, follow the [VPS handoff](docs/vps-deployment.md).
+
+Run `make help` for all commands. Common follow-ups are `make health`, `make logs`, `make stop`, `make db-shell`, `make db-backup`, `make test`, and `make build`. Use `make rebuild` after source changes to refresh the container images. `make db-backup BACKUP_FILE=backup.dump` refuses to overwrite an existing dump. `make stop` preserves the database volume.
 
 Check the running stack:
 
@@ -24,7 +25,7 @@ curl 'http://localhost:8088/api/employees?query=ACM-00001&size=10'
 curl 'http://localhost:8088/actuator/health'
 ```
 
-For local development without the app containers, use Java 21 or later, Maven 3.9 or later, and Node.js 24 with npm 11. Start the database with `docker compose up -d db`, seed with `sh scripts/seed.sh`, run `cd backend && mvn spring-boot:run`, then run `cd frontend && npm ci && npm start` in another terminal. The Angular development server at `http://localhost:4200` proxies `/api` to the backend at `http://localhost:8080`.
+For local development without the app containers, use Java 21 or later, Maven 3.9 or later, and Node.js 24 with npm 11. Run `make db-up`, `make seed`, and `make install-frontend`, then start `make dev-backend` and `make dev-frontend` in separate terminals. The Angular development server at `http://localhost:4200` proxies `/api` to the backend at `http://localhost:8080`.
 
 The directory supports search, filters, paging, and local-currency display. Select an employee to change salary or archive the record, or use **Add employee** to create one. **Reports** answers pay questions for the active, filtered population. The same archive action is available through the deployed API:
 
@@ -50,9 +51,9 @@ Money is stored as annual gross base pay in each employee's local currency. Cros
 ## Verify the work
 
 ```sh
-cd backend && mvn verify
-cd frontend && npm ci && npm test -- --watch=false
-cd frontend && npm run build
+make install-frontend
+make test
+make build
 ```
 
 Backend tests currently cover salary rules, persistence and uniqueness, seeding, employee HTTP behavior, and filtered analytics. The frontend tests cover navigation, directory, employee form, and report interactions. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.
