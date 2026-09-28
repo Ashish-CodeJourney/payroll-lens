@@ -6,7 +6,7 @@ Payroll Lens is an HR Manager application for maintaining ACME's current annual 
 
 ## Try the current backend
 
-Prerequisites: Java 21 or later, Maven 3.9 or later, Node.js 22 or later, npm, and Docker with Compose. From the repository root:
+Prerequisites: Java 21 or later, Maven 3.9 or later, Node.js 24 with npm 11, and Docker with Compose. From the repository root:
 
 ```sh
 docker compose up -d db
@@ -15,6 +15,8 @@ cd backend && mvn spring-boot:run
 ```
 
 The database is mapped to local port `5433`; the API starts at `http://localhost:8080`. The seed command is idempotent: it inserts the same 10,000 synthetic employees once and leaves existing rows intact on reruns. Flyway applies the schema on startup.
+
+For a single-containerized entry point, run `docker compose up --build -d db api web` and then `docker compose run --rm seed`. Open `http://localhost:8088`; `WEB_PORT` can change the host port. The web container serves Angular and proxies `/api` to Spring Boot. The seed command remains idempotent. `POSTGRES_PASSWORD` can override the local demo default; the database port is bound to localhost only.
 
 ```sh
 curl 'http://localhost:8080/api/employees?query=ACM-00001&size=10'
@@ -36,7 +38,7 @@ curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
 | Angular UI | Material directory, employee create/edit/archive form, and filtered salary reports. |
-| Deployment and demo | Planned after the end-to-end workflow is complete. |
+| Deployment and demo | Docker Compose and CI configuration are present. Public URL and video demo are not yet available. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
 

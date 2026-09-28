@@ -4,9 +4,9 @@ services:
     environment:
       POSTGRES_DB: payroll_lens
       POSTGRES_USER: payroll_lens
-      POSTGRES_PASSWORD: payroll_lens
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payroll_lens}
     ports:
-      - "5433:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - payroll_data:/var/lib/postgresql/data
     healthcheck:
@@ -14,5 +14,32 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+  api:
+    image: payroll-lens-api:local
+    build: ./backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/payroll_lens
+      DATABASE_USER: payroll_lens
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-payroll_lens}
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build: ./frontend
+    ports:
+      - "${WEB_PORT:-8088}:80"
+    depends_on:
+      - api
+  seed:
+    profiles: [seed]
+    image: payroll-lens-api:local
+    command: ["--spring.main.web-application-type=none", "--app.seed=true"]
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/payroll_lens
+      DATABASE_USER: payroll_lens
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-payroll_lens}
+    depends_on:
+      db:
+        condition: service_healthy
 volumes:
   payroll_data:

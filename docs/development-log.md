@@ -92,3 +92,7 @@ The edit-workflow test initially failed to compile because the form component di
 ## Angular salary reports
 
 The report-screen test first failed to compile because the component did not exist. The implementation displays a labelled fixed-rate USD total, median, headcount, distribution, and country/department/level tables. The test observes the displayed rate date and sends a department-filtered request. Selected mutation: dropping the department parameter made the test fail because the filtered request was absent. **Result:** 1 applied, 1 killed, 0 survived. The parameter was restored before final verification.
+
+## Container release and CI
+
+The first frontend container build failed during `npm ci`: the Linux Alpine dependency graph expected two `@emnapi` packages absent from the lockfile. A local lockfile-only refresh did not resolve it. Adding those peer packages to the development dependency graph and using Node 24/npm 11 consistently across local, Docker, and CI produced a successful clean image build. The backend image built with Java 21 and Maven. Compose first encountered a host-port conflict on 8081, so the documented default web port moved to 8088. A containerized seed run completed without changing the 10,000-row count; proxied health, directory, reports API, and direct Angular reports route returned successfully. The CI workflow is configured but has not yet run on a hosted GitHub runner.
