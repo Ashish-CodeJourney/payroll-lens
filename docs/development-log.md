@@ -40,3 +40,11 @@ Selected mutation check: replacing the stored currency with a fixed `USD` in `Em
 Selected mutations: generating 9,999 instead of 10,000 records failed the count assertion; setting every currency to `USD` failed the country/currency assertion. **Result:** 2 applied, 2 killed, 0 survived. Both mutations were reverted. The seed script was also run against local PostgreSQL, and `SELECT COUNT(*) FROM employees` returned `10000`.
 
 `mvn -q verify` passes. Its JaCoCo report covers every line of the generator and batch insertion service, with one branch in the service still uncovered. The command-line runner is exercised by the PostgreSQL smoke check, though that separate process is not reflected in the unit-test coverage report. Coverage is reported per class rather than claimed to be 100% overall.
+
+## Employee directory API
+
+The HTTP test `cd backend && mvn -q -Dtest=EmployeeApiTest test` first returned 404 for `/api/employees`. With paging implemented, a new combined-filter test failed with `totalElements` 4 instead of 1; adding database predicates made it pass. Search by number and email was then observed failing against name-only search. A page-size test observed `size` 1000 before the 100 cap was added, and invalid page/size requests failed the expected 422 contract before validation was added.
+
+Selected mutations: removing the page-size cap failed its API test, and removing the email search predicate failed the identity-search test. **Result:** 2 applied, 2 killed, 0 survived. Both were reverted before the final run.
+
+The first full-suite run exposed shared H2 state between the seed integration test and API tests: duplicate employee-number inserts failed even though each test class passed alone. A unique in-memory database name per Spring context removed that coupling; `mvn -q verify` then passed with all test classes together.
