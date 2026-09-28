@@ -1,5 +1,6 @@
 package com.acme.payrolllens.api;
 
+import com.acme.payrolllens.employee.ArchivedEmployeeException;
 import com.acme.payrolllens.employee.EmployeeNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,11 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> conflict(DataIntegrityViolationException exception) {
         return ResponseEntity.status(409).body(new ApiError("CONFLICT",
                 "Employee number or email already exists", Map.of()));
+    }
+
+    @ExceptionHandler(ArchivedEmployeeException.class)
+    public ResponseEntity<ApiError> archivedEmployee(ArchivedEmployeeException exception) {
+        return ResponseEntity.status(409).body(new ApiError("CONFLICT", exception.getMessage(), Map.of()));
     }
 
     @ExceptionHandler(EmployeeNotFoundException.class)

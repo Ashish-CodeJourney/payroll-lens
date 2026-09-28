@@ -222,6 +222,32 @@ class EmployeeApiTest {
     }
 
     @Test
+    void rejectsChangesToAnArchivedEmployee() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("80000.00"), Currency.getInstance("USD"));
+        Employee employee = repository.saveAndFlush(Employee.create("ACM-30006", "Sam Lee",
+                "sam.archived@example.com", "US", "People", "HR Partner", "L2", salary));
+        mockMvc.perform(patch("/api/employees/{id}/archive", employee.getId()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/api/employees/{id}", employee.getId()).contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"employeeNumber":"ACM-30006","fullName":"Sam Updated",
+                                 "email":"sam.archived@example.com","countryCode":"US",
+                                 "department":"People","jobTitle":"HR Partner",
+                                 "jobLevel":"L2","annualSalary":90000.00,"currencyCode":"USD"}
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("CONFLICT"))
+                .andExpect(jsonPath("$.message").value("Archived employees are read-only"));
+
+        entityManager.flush();
+        entityManager.clear();
+        mockMvc.perform(get("/api/employees/{id}", employee.getId()))
+                .andExpect(jsonPath("$.fullName").value("Sam Lee"))
+                .andExpect(jsonPath("$.annualSalary").value(80000.00));
+    }
+
+    @Test
     void filtersActiveAndArchivedEmployees() throws Exception {
         AnnualSalary salary = new AnnualSalary(new BigDecimal("80000.00"), Currency.getInstance("USD"));
         Employee archived = repository.save(Employee.create("ACM-30004", "Sam Lee",

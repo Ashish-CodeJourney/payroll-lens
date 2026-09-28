@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +17,7 @@ import { EmployeeApi, EmployeeInput } from './employee-api';
 export class EmployeeForm implements OnInit {
   private readonly api = inject(EmployeeApi);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder).nonNullable;
   id = Number(this.route.snapshot.paramMap.get('id')) || null;
   readonly busy = signal(false);
@@ -42,6 +43,7 @@ export class EmployeeForm implements OnInit {
       next: employee => {
         this.form.patchValue({ ...employee, annualSalary: String(employee.annualSalary) });
         this.archived.set(employee.archived);
+        if (employee.archived) this.form.disable();
         this.busy.set(false);
       },
       error: () => { this.error.set('Unable to load employee.'); this.busy.set(false); },
@@ -59,11 +61,15 @@ export class EmployeeForm implements OnInit {
     const values = this.form.getRawValue();
     const input: EmployeeInput = { ...values, annualSalary: Number(values.annualSalary) };
     this.busy.set(true);
+    const creating = !this.id;
     const request = this.id ? this.api.update(this.id, input) : this.api.create(input);
     request.subscribe({
       next: employee => {
-        this.id = employee.id;
         this.busy.set(false);
+        if (creating) {
+          void this.router.navigate(['/employees', employee.id]);
+          return;
+        }
         this.message.set('Employee saved');
       },
       error: (response: HttpErrorResponse) => {
@@ -77,7 +83,12 @@ export class EmployeeForm implements OnInit {
     if (!this.id || this.archived()) return;
     this.busy.set(true);
     this.api.archive(this.id).subscribe({
-      next: () => { this.archived.set(true); this.busy.set(false); this.message.set('Employee archived'); },
+      next: () => {
+        this.archived.set(true);
+        this.form.disable();
+        this.busy.set(false);
+        this.message.set('Employee archived');
+      },
       error: () => { this.busy.set(false); this.error.set('Unable to archive employee.'); },
     });
   }

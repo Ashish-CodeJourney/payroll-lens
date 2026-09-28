@@ -62,7 +62,8 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an employee and current salary",
-            description = "Replace editable profile fields and current annual gross base salary.")
+            description = "Replace editable profile fields and current annual gross base salary. "
+                    + "Archived employees are read-only and return 409 Conflict.")
     public EmployeeView update(@PathVariable Long id, @Valid @RequestBody EmployeeInput input) {
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));

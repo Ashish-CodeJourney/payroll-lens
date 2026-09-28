@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { EmployeeForm } from './employee-form';
 
 describe('EmployeeForm', () => {
@@ -54,14 +54,43 @@ describe('EmployeeForm', () => {
     request.flush({ ...employee, archived: true });
     fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Employee archived');
-    expect((fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[type="submit"]')?.disabled).toBe(true);
+    expect((fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[type="submit"]')).toBeNull();
+    const fields = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
+    expect(fields.length).toBeGreaterThan(0);
+    expect(fields.every(field => field.disabled)).toBe(true);
+    http.verify();
+  });
+
+  it('shows an already archived employee without editable fields', async () => {
+    await TestBed.configureTestingModule({
+      imports: [EmployeeForm],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id: '9' }) } } }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(EmployeeForm);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne('/api/employees/9').flush({ id: 9, employeeNumber: 'ACM-00009', fullName: 'Sam Lee',
+      email: 'sam@example.com', countryCode: 'US', department: 'People', jobTitle: 'HR Partner',
+      jobLevel: 'L2', annualSalary: 90000, currencyCode: 'USD', archived: true });
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const fields = Array.from(root.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
+    expect(fields.length).toBeGreaterThan(0);
+    expect(fields.every(field => field.disabled)).toBe(true);
+    expect(root.querySelector<HTMLInputElement>('input[aria-label="Annual salary"]')?.value).toBe('90000');
+    expect(root.textContent).toContain('Archived employee');
+    expect(root.textContent).toContain('Archived records are read-only.');
+    expect(root.querySelector<HTMLButtonElement>('button[type="submit"]')).toBeNull();
     http.verify();
   });
 
   it('creates a valid employee from the form', async () => {
     await TestBed.configureTestingModule({
       imports: [EmployeeForm],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([
+        { path: 'employees/:id', component: EmployeeForm },
+      ]),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({}) } } }],
     }).compileComponents();
     const fixture = TestBed.createComponent(EmployeeForm);
@@ -81,8 +110,8 @@ describe('EmployeeForm', () => {
     expect(request.request.method).toBe('POST');
     expect(request.request.body.annualSalary).toBe(1200000);
     request.flush({ ...request.request.body, id: 99, archived: false });
-    fixture.detectChanges();
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Employee saved');
+    await fixture.whenStable();
+    expect(TestBed.inject(Router).url).toBe('/employees/99');
     http.verify();
   });
 });

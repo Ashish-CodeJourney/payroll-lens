@@ -73,6 +73,9 @@ public class Employee {
     public void update(String employeeNumber, String fullName, String email,
             String countryCode, String department, String jobTitle, String jobLevel,
             AnnualSalary salary) {
+        if (archived) {
+            throw new ArchivedEmployeeException();
+        }
         this.employeeNumber = employeeNumber;
         this.fullName = fullName;
         this.email = email;
