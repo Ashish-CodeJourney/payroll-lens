@@ -144,4 +144,24 @@ class EmployeeApiTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").value("CONFLICT"));
     }
+
+    @Test
+    void returnsOneEmployeeById() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("95000.00"), Currency.getInstance("EUR"));
+        Employee employee = repository.saveAndFlush(Employee.create("ACM-30001", "Elena Weber",
+                "elena@example.com", "DE", "Finance", "Financial Analyst", "L3", salary));
+
+        mockMvc.perform(get("/api/employees/{id}", employee.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fullName").value("Elena Weber"))
+                .andExpect(jsonPath("$.annualSalary").value(95000.00))
+                .andExpect(jsonPath("$.currencyCode").value("EUR"));
+    }
+
+    @Test
+    void reportsAnUnknownEmployee() throws Exception {
+        mockMvc.perform(get("/api/employees/999999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"));
+    }
 }

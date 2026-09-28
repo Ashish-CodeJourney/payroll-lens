@@ -1,5 +1,6 @@
 package com.acme.payrolllens.api;
 
+import com.acme.payrolllens.employee.EmployeeNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,5 +30,10 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> conflict(DataIntegrityViolationException exception) {
         return ResponseEntity.status(409).body(new ApiError("CONFLICT",
                 "Employee number or email already exists", Map.of()));
+    }
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<ApiError> notFound(EmployeeNotFoundException exception) {
+        return ResponseEntity.status(404).body(new ApiError("NOT_FOUND", exception.getMessage(), Map.of()));
     }
 }

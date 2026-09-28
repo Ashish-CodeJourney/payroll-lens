@@ -54,3 +54,7 @@ The first full-suite run exposed shared H2 state between the seed integration te
 The new POST test first received 405 because no creation handler existed. A valid request then returned 201 and persisted its salary. The invalid-fields test failed its `fieldErrors` assertions until request validation and the 422 handler were added. A duplicate employee-number request failed the expected 409 contract before the conflict handler was added.
 
 Selected mutation: removing `@Valid` from the POST request caused the invalid-fields test to fail. **Result:** 1 applied, 1 killed, 0 survived. The annotation was restored.
+
+## Employee detail API
+
+`EmployeeApiTest#returnsOneEmployeeById` first received 404 while no detail route existed, then passed after the route returned the saved employee. A missing-employee test then failed because the 404 response lacked the standard JSON error; a typed not-found exception and handler supplied it. Changing that handler's HTTP status from 404 to 400 caused the missing-employee test to fail. **Result:** 1 selected mutation applied, 1 killed, 0 survived; the correct status was restored.
