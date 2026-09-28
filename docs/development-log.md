@@ -102,3 +102,7 @@ The first frontend container build failed during `npm ci`: the Linux Alpine depe
 A Playwright-driven browser walkthrough exercises the deployed Angular flow against the seeded PostgreSQL instance: search for one employee, edit salary, and confirm the filtered report reflects the change. Its first recording timed out on an expected total before the UI had rendered the filtered response; the script now also asserts the persisted API value and report calculation, and waits for the visible total. The successful recording is committed as a short MP4. The script restores the original salary in a `finally` block, and a subsequent API read confirmed the original value. The database count remained 10,000.
 
 After the demo commit reached the public GitHub repository, hosted CI run `36419505641` passed both jobs: Spring Boot `mvn -B verify` and Angular clean install, tests, and production build. No public application host is configured yet.
+
+## VPS handoff
+
+The owner chose to self-host the public demo. The previously tested Compose stack remains the release path; its web port is now bound to localhost for a host HTTPS reverse proxy. A VPS guide and Caddyfile example document first start, deterministic seed, smoke checks, updates, and database backup. An unfinished experiment to bundle Angular inside Spring Boot for a managed free host was removed before commit, preserving the tested three-service architecture.

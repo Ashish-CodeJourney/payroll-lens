@@ -11,6 +11,7 @@
 | Server-side paging and filters | The UI receives at most 100 directory records per request. Search predicates execute in the database, avoiding a 10,000-row browser payload. |
 | Archive instead of delete | Old records remain identifiable for correction and review. Current-pay reports exclude them, while the directory can include archived records explicitly. |
 | No authentication in demo | The brief allows one HR Manager, and all records are synthetic. This build must not hold real salaries; access control is required before any real use. |
+| Owner-managed VPS release | The owner chose to publish the verified Compose stack on a VPS. The web and database ports bind to loopback, and a host reverse proxy terminates HTTPS. This keeps the submission independent of a third-party free tier and leaves the public URL under the owner's control. |
 
 ## Capacity and verification
 
