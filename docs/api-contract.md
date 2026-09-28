@@ -1,6 +1,8 @@
-# API contract (initial)
+# API contract
 
 The Angular client uses JSON under `/api`. Employee money is an annual gross base salary in the employee's local currency. Cross-country reports explicitly identify their reporting currency and fixed rate date.
+
+Swagger UI is available at `/swagger-ui.html`, with generated OpenAPI JSON at `/v3/api-docs`. The generated contract is derived from the running Spring Boot application; this page adds the business rules and error semantics behind the endpoints.
 
 | Method | Path | Behavior |
 | --- | --- | --- |

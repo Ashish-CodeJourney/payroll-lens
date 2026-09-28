@@ -16,6 +16,8 @@ make run
 
 Open `http://localhost:8088`. The web container serves Angular and proxies `/api` to Spring Boot. The database is mapped to localhost port `5433` and is not exposed publicly. Flyway applies the schema on startup. The seed command inserts the same 10,000 synthetic employees once and leaves existing rows intact on reruns. `WEB_PORT` can change the web host port; `POSTGRES_PASSWORD` can override the local demo default. For a public demo, follow the [VPS handoff](docs/vps-deployment.md).
 
+Review the interactive API reference at `http://localhost:8088/swagger-ui.html` or fetch its OpenAPI JSON at `http://localhost:8088/v3/api-docs`. Both are served through the same web port as Angular. The reference documents employee management and active-pay reports; the [API contract](docs/api-contract.md) explains error and currency semantics in prose.
+
 Run `make help` for all commands. Common follow-ups are `make health`, `make logs`, `make stop`, `make db-shell`, `make db-backup`, `make test`, and `make build`. Use `make rebuild` after source changes to refresh the container images. `make db-backup BACKUP_FILE=backup.dump` refuses to overwrite an existing dump. `make stop` preserves the database volume.
 
 Check the running stack:

@@ -1,6 +1,7 @@
 package com.acme.payrolllens.employee;
 
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,9 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @Operation(summary = "Search and page employees",
+            description = "Search by name, employee number, or email. Combine country, department, "
+                    + "level, and status filters. Page size is capped at 100; default status is ACTIVE.")
     public EmployeePage list(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int size,
             @RequestParam(required = false) String query,
@@ -41,6 +45,8 @@ public class EmployeeController {
     }
 
     @PostMapping
+    @Operation(summary = "Create an employee",
+            description = "Record current annual gross base salary in the employee's local currency.")
     public ResponseEntity<EmployeeView> create(@Valid @RequestBody EmployeeInput input) {
         Employee employee = repository.save(input.toEmployee());
         return ResponseEntity.created(URI.create("/api/employees/" + employee.getId()))
@@ -48,12 +54,15 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get an employee")
     public EmployeeView get(@PathVariable Long id) {
         return EmployeeView.from(repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id)));
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update an employee and current salary",
+            description = "Replace editable profile fields and current annual gross base salary.")
     public EmployeeView update(@PathVariable Long id, @Valid @RequestBody EmployeeInput input) {
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
@@ -62,6 +71,8 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}/archive")
+    @Operation(summary = "Archive an employee",
+            description = "Exclude the employee from active pay reports while retaining their record.")
     public EmployeeView archive(@PathVariable Long id) {
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));

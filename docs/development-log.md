@@ -110,3 +110,11 @@ The owner chose to self-host the public demo. The previously tested Compose stac
 ## Makefile workflow
 
 This setup-only increment adds documented targets for local startup, seeding, PostgreSQL access and backup, development servers, tests, and builds. No artificial behavior test was added. `make test` passed 28 backend and 7 frontend tests; `make build` packaged Spring Boot and built Angular. `make run` restarted the existing local images and reran the idempotent seed; the proxied health check returned `UP` and the employee API still reported 10,000 records. `make db-status` passed, and `make db-backup` produced a PostgreSQL custom-format dump while a second attempt correctly refused to overwrite it. A forced `--build` check could not reach Docker Hub for base-image metadata in this environment, so `make rebuild` remains available for hosts with registry access.
+
+## Interactive API documentation
+
+`ApiDocumentationTest#publishesAnOpenApiContractForEmployeeManagementAndReports` first received 404 at `/v3/api-docs`. Adding the Springdoc MVC UI starter and application metadata made the test pass with employee and analytics paths and a relative server URL. A second test first failed because the directory operation had no summary; endpoint annotations then supplied concise descriptions, including the fixed reporting-rate date. The UI asset also returned 200 in the Spring test. A selected mutation changed the OpenAPI server URL from `/` to `/api`; the contract test failed with the wrong value. **Result:** 1 applied, 1 killed, 0 survived; the URL was restored.
+
+The updated API image was started behind the existing Nginx container. Before the proxy change was activated, `/v3/api-docs` on the web port returned Angular HTML; after restarting the rebuilt web image it returned JSON. `/swagger-ui.html` served HTML, its configuration endpoint served JSON, and the proxied health check remained UP.
+
+Final `make test` passed 30 backend and 7 frontend tests. Both container images built, `nginx -t` passed, and the directory still returned 10,000 total records when archived employees were included.

@@ -12,6 +12,7 @@
 | Archive instead of delete | Old records remain identifiable for correction and review. Current-pay reports exclude them, while the directory can include archived records explicitly. |
 | No authentication in demo | The brief allows one HR Manager, and all records are synthetic. This build must not hold real salaries; access control is required before any real use. |
 | Owner-managed VPS release | The owner chose to publish the verified Compose stack on a VPS. The web and database ports bind to loopback, and a host reverse proxy terminates HTTPS. This keeps the submission independent of a third-party free tier and leaves the public URL under the owner's control. |
+| Generated OpenAPI and Swagger UI | Reviewers can inspect and try the actual backend contract without maintaining a second machine-readable specification. Springdoc 2.8.17 matches Spring Boot 3.5; Nginx proxies the docs on the same origin as Angular. The reference is intentionally public for this synthetic, no-auth demo and must be restricted alongside the API before real salary data is used. |
 
 ## Capacity and verification
 

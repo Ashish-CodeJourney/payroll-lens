@@ -14,6 +14,8 @@ The following are excerpts from the actual instructions supplied in this session
 
 > “use Trunk Based Developmenrt”
 
+> “Now add swagger if required for API documentation”
+
 The job description also specifies modern Angular with TypeScript, so this project uses current Angular rather than the legacy AngularJS 1.x framework. The repository's [working rules](../AGENTS.md) turn the TDD and trunk requirements into a repeatable workflow. No Spring Boot- or Angular-specific MCP integration was available during this work; the agent used local tools, tests, and code inspection. This file does not claim unrecorded AI prompts or reviews.
 
 ## How suggestions were checked
@@ -21,3 +23,5 @@ The job description also specifies modern Angular with TypeScript, so this proje
 The agent ran each new behavioral test before implementation, observed the expected failure, then added the smallest passing change. The [development log](development-log.md) records those observations and selected mutations that tests caught. Backend verification uses `mvn verify`; the real PostgreSQL seed was also run and counted. Generated code was not treated as correct merely because it compiled. Documentation-only changes are checked against the actual files and commands rather than given artificial behavior tests.
 
 AI accelerated scaffolding, test case identification, implementation, and documentation. It did not replace the need to inspect failures, review query behavior, or verify the final Angular workflow and deployed demo. Known gaps and next milestones remain visible in the [README](../README.md) and [plan](plan.md).
+
+For API documentation, the agent checked springdoc's published Spring Boot compatibility matrix before selecting the dependency. A new HTTP test first observed 404 for the missing OpenAPI endpoint, then verified generated routes, metadata, same-origin server URL, operation summaries, and the UI asset. The Nginx path was checked through the running containers before and after its proxy change.
