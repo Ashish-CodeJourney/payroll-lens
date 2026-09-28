@@ -1,0 +1,16 @@
+.heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+h2 { font-size: 2rem; margin: .25rem 0; }
+.eyebrow { color: #536c91; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.filters mat-form-field { width: min(100%, 300px); }
+.filters label { display: grid; gap: .25rem; font-size: .8rem; color: #4a5b72; }
+.filters label input, .filters select { min-height: 2.5rem; border: 1px solid #a8b7ca; border-radius: 4px; padding: .5rem; background: white; }
+.count { margin: 1.5rem 0 .5rem; color: #51647d; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; text-align: left; }
+th, td { padding: .9rem .75rem; border-bottom: 1px solid #e4e9f1; white-space: nowrap; }
+th { color: #51647d; font-size: .8rem; }
+td a { color: #2456a3; font-weight: 600; }
+td small { display: block; color: #6b7d93; }
+.paging { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
+@media (max-width: 700px) { .heading { align-items: start; flex-direction: column; } }

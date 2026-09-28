@@ -2,7 +2,7 @@
 
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Assessment status:** The Spring Boot employee API, filtered salary analytics, PostgreSQL schema, deterministic 10,000-record seed, and backend tests are implemented. The Angular user interface, CI, public deployment, and video demo are still in progress. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
+> **Assessment status:** The Spring Boot employee API, filtered salary analytics, PostgreSQL schema, deterministic 10,000-record seed, and backend tests are implemented. The Angular directory is usable; edit forms, report screens, CI, public deployment, and video demo are still in progress. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
 
 ## Try the current backend
 
@@ -21,7 +21,7 @@ curl 'http://localhost:8080/api/employees?query=ACM-00001&size=10'
 curl 'http://localhost:8080/actuator/health'
 ```
 
-The Angular scaffold can be started separately with `cd frontend && npm ci && npm start`; it is not yet a functional HR interface. Until the UI is complete, use the API to exercise employee management. For example:
+The Angular app can be started separately with `cd frontend && npm ci && npm start`, then opened at `http://localhost:4200`. The development server proxies `/api` to the backend. The directory supports search, filters, paging, and local-currency display; edit and report screens are still in progress. Until those screens are complete, use the API to exercise salary changes. For example:
 
 ```sh
 curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
@@ -35,7 +35,7 @@ curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 | Directory | Server-side search, country/department/level/status filters, and pages capped at 100 records. |
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
-| Angular UI | Material application shell and navigation are in place; management and report screens are next. |
+| Angular UI | Material shell and employee directory with search, filters, paging, and salary display; management and report screens are next. |
 | Deployment and demo | Planned after the end-to-end workflow is complete. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
@@ -48,7 +48,7 @@ cd frontend && npm ci && npm test -- --watch=false
 cd frontend && npm run build
 ```
 
-Backend tests currently cover salary rules, persistence and uniqueness, seeding, and the employee HTTP contract. The frontend test and build commands currently validate only the generated Angular scaffold. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.
+Backend tests currently cover salary rules, persistence and uniqueness, seeding, employee HTTP behavior, and filtered analytics. The frontend tests cover navigation and directory interactions. JaCoCo writes its backend report to `backend/target/site/jacoco/` after `mvn verify`. [Development evidence](docs/development-log.md) records observed RED/GREEN steps and selected mutation checks.
 
 ## Reviewer map
 

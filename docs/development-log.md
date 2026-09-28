@@ -80,3 +80,7 @@ A follow-up employee API test first accepted `JPY` (201), even though analytics 
 ## Angular application shell
 
 The shell test first rendered the Angular generator's `Hello, frontend` title instead of Payroll Lens navigation. A small Angular Material toolbar and router links made the test pass. `npm test -- --watch=false` and `npm run build` passed for the shell slice.
+
+## Angular employee directory
+
+The first directory test failed to compile because the component did not exist. With the component and HTTP client in place, it verified a 25-record page request, a visible local-currency salary, a new search request, and an empty-result message. The initial run also exposed a missing router provider in the test fixture, which was added. Selected mutation: removing the search query from the API call made the test fail because no matching filtered request was sent. **Result:** 1 applied, 1 killed, 0 survived. The query was restored before final verification.
