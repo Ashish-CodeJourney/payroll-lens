@@ -76,3 +76,7 @@ Selected mutation: changing the archive assignment from `true` to `false` failed
 Selected mutation: changing the EUR-to-USD factor from `1.10` to `1.00` failed the API test's expected total. **Result:** 1 applied, 1 killed, 0 survived. The rate was restored before full verification.
 
 A follow-up employee API test first accepted `JPY` (201), even though analytics had no fixed USD rate for it. Request validation now rejects unsupported currencies with a field-level 422 response, keeping every saved salary reportable.
+
+## Angular application shell
+
+The shell test first rendered the Angular generator's `Hello, frontend` title instead of Payroll Lens navigation. A small Angular Material toolbar and router links made the test pass. `npm test -- --watch=false` and `npm run build` passed for the shell slice.

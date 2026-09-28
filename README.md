@@ -35,7 +35,7 @@ curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 | Directory | Server-side search, country/department/level/status filters, and pages capped at 100 records. |
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
-| Angular UI | Scaffolded; management and report screens are planned. |
+| Angular UI | Material application shell and navigation are in place; management and report screens are next. |
 | Deployment and demo | Planned after the end-to-end workflow is complete. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
