@@ -6,7 +6,7 @@ WEB_PORT ?= 8088
 
 .DEFAULT_GOAL := help
 .PHONY: help run up rebuild stop logs ps health seed db-up db-status db-shell db-backup \
-	dev-backend dev-frontend install-frontend test test-backend test-frontend \
+	dev-backend dev-frontend install-frontend test test-backend test-frontend test-frontend-coverage \
 	build build-backend build-frontend test-layout
 
 help: ## Show available commands
@@ -70,6 +70,9 @@ test-backend: ## Run JUnit and integration tests with JaCoCo
 
 test-frontend: ## Run Angular tests once
 	$(NPM) test -- --watch=false
+
+test-frontend-coverage: ## Run Angular tests with a V8 coverage report
+	$(NPM) test -- --watch=false --coverage
 
 test-layout: ## Check live desktop/mobile alignment (run the app first)
 	$(NPM) run test:layout
