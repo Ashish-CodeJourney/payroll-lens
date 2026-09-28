@@ -1,13 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { AnalyticsApi, AnalyticsReport, Breakdown } from './analytics-api';
 
 @Component({
   selector: 'app-analytics-report',
-  imports: [MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule],
+  imports: [MatButtonModule, MatCardModule],
   templateUrl: './analytics-report.html',
   styleUrl: './analytics-report.scss',
 })

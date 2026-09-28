@@ -2,13 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { EmployeeApi, EmployeePage } from './employee-api';
 
 @Component({
   selector: 'app-employee-directory',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule],
+  imports: [RouterLink, MatButtonModule, MatCardModule],
   templateUrl: './employee-directory.html',
   styleUrl: './employee-directory.scss',
 })
