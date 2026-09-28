@@ -62,3 +62,9 @@ Selected mutation: removing `@Valid` from the POST request caused the invalid-fi
 ## Employee editing API
 
 The PUT behavior test first received 405, then passed after the update route changed both profile and current salary. The test flushes and clears the persistence context before reading the record again. Removing the salary assignment from the update method made the test fail; it was restored. **Result:** 1 selected mutation applied, 1 killed, 0 survived.
+
+## Employee archiving and status filtering
+
+`EmployeeApiTest#archivesAnEmployeeWithoutRemovingTheirRecord` first received 405 before the PATCH route existed, then passed after archiving persisted the status while retaining the record. `EmployeeApiTest#filtersActiveAndArchivedEmployees` initially returned both records for the active filter; the database predicate made ACTIVE, ARCHIVED, and ALL filters behave as requested.
+
+Selected mutation: changing the archive assignment from `true` to `false` failed the API assertion (`$.archived` expected true but was false). **Result:** 1 applied, 1 killed, 0 survived. The assignment was restored before the final suite.

@@ -3,6 +3,7 @@ package com.acme.payrolllens.employee;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -192,5 +193,39 @@ class EmployeeApiTest {
         mockMvc.perform(get("/api/employees/{id}", employee.getId()))
                 .andExpect(jsonPath("$.department").value("Engineering"))
                 .andExpect(jsonPath("$.annualSalary").value(110000.00));
+    }
+
+    @Test
+    void archivesAnEmployeeWithoutRemovingTheirRecord() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("80000.00"), Currency.getInstance("USD"));
+        Employee employee = repository.saveAndFlush(Employee.create("ACM-30003", "Sam Lee",
+                "sam.lee@example.com", "US", "People", "HR Partner", "L2", salary));
+
+        mockMvc.perform(patch("/api/employees/{id}/archive", employee.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.archived").value(true));
+        mockMvc.perform(get("/api/employees/{id}", employee.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.archived").value(true));
+    }
+
+    @Test
+    void filtersActiveAndArchivedEmployees() throws Exception {
+        AnnualSalary salary = new AnnualSalary(new BigDecimal("80000.00"), Currency.getInstance("USD"));
+        Employee archived = repository.save(Employee.create("ACM-30004", "Sam Lee",
+                "sam.lee2@example.com", "US", "People", "HR Partner", "L2", salary));
+        repository.saveAndFlush(Employee.create("ACM-30005", "Alex Lee",
+                "alex.lee2@example.com", "US", "People", "HR Partner", "L2", salary));
+        mockMvc.perform(patch("/api/employees/{id}/archive", archived.getId()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/employees").param("status", "ACTIVE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.items[0].employeeNumber").value("ACM-30005"));
+        mockMvc.perform(get("/api/employees").param("status", "ARCHIVED"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.items[0].employeeNumber").value("ACM-30004"));
     }
 }

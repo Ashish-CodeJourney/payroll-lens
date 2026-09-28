@@ -84,6 +84,10 @@ public class Employee {
         this.currencyCode = salary.currency().getCurrencyCode();
     }
 
+    public void archive() {
+        this.archived = true;
+    }
+
     public Long getId() { return id; }
     public String getEmployeeNumber() { return employeeNumber; }
     public String getFullName() { return fullName; }

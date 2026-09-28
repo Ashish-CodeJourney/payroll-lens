@@ -10,7 +10,8 @@ final class EmployeeSpecifications {
     private EmployeeSpecifications() {
     }
 
-    static Specification<Employee> matching(String query, String country, String department, String level) {
+    static Specification<Employee> matching(String query, String country, String department,
+            String level, String status) {
         return (root, criteria, builder) -> {
             List<Predicate> conditions = new ArrayList<>();
             if (query != null && !query.isBlank()) {
@@ -28,6 +29,12 @@ final class EmployeeSpecifications {
             }
             if (level != null && !level.isBlank()) {
                 conditions.add(builder.equal(root.get("jobLevel"), level));
+            }
+            switch (status) {
+                case "ACTIVE" -> conditions.add(builder.isFalse(root.get("archived")));
+                case "ARCHIVED" -> conditions.add(builder.isTrue(root.get("archived")));
+                case "ALL" -> { }
+                default -> throw new IllegalArgumentException("Status must be ACTIVE, ARCHIVED, or ALL");
             }
             return builder.and(conditions.toArray(Predicate[]::new));
         };

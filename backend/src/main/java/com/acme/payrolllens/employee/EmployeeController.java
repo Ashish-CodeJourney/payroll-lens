@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,12 +30,13 @@ public class EmployeeController {
             @RequestParam(required = false) String query,
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String department,
-            @RequestParam(required = false) String level) {
+            @RequestParam(required = false) String level,
+            @RequestParam(defaultValue = "ACTIVE") String status) {
         if (page < 0 || size < 1) {
             throw new IllegalArgumentException("Page must be nonnegative and size must be positive");
         }
         return EmployeePage.from(repository.findAll(
-                EmployeeSpecifications.matching(query, country, department, level),
+                EmployeeSpecifications.matching(query, country, department, level, status),
                 PageRequest.of(page, Math.min(size, 100), Sort.by("employeeNumber").ascending())));
     }
 
@@ -56,6 +58,14 @@ public class EmployeeController {
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
         input.applyTo(employee);
+        return EmployeeView.from(repository.save(employee));
+    }
+
+    @PatchMapping("/{id}/archive")
+    public EmployeeView archive(@PathVariable Long id) {
+        Employee employee = repository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+        employee.archive();
         return EmployeeView.from(repository.save(employee));
     }
 }
