@@ -2,7 +2,7 @@
 
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, and Angular directory, employee form, and reports are implemented. CI, public deployment, and video demo are still in progress. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
+> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, Angular workflow, local container deployment, CI configuration, and [demo video](docs/demo.mp4) are present. A public deployment URL and hosted CI run are still pending. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
 
 ## Try the current backend
 
@@ -29,6 +29,8 @@ The Angular app can be started separately with `cd frontend && npm ci && npm sta
 curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 ```
 
+The [short silent demo](docs/demo.mp4) shows a directory search, salary edit, and updated filtered report. To regenerate it from the running Compose stack, install Chrome and FFmpeg, then run `cd frontend && npm ci && npm run demo:record`. The script asserts the saved value and report result, then restores the seeded employee's original salary even if recording fails.
+
 ## Delivered behavior and next milestones
 
 | Area | Current state |
@@ -38,7 +40,7 @@ curl -X PATCH 'http://localhost:8080/api/employees/1/archive'
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
 | Angular UI | Material directory, employee create/edit/archive form, and filtered salary reports. |
-| Deployment and demo | Docker Compose and CI configuration are present. Public URL and video demo are not yet available. |
+| Deployment and demo | Local Compose stack and [video walkthrough](docs/demo.mp4) are verified. A public URL and hosted CI run are pending. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
 

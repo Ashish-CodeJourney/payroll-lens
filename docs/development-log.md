@@ -96,3 +96,7 @@ The report-screen test first failed to compile because the component did not exi
 ## Container release and CI
 
 The first frontend container build failed during `npm ci`: the Linux Alpine dependency graph expected two `@emnapi` packages absent from the lockfile. A local lockfile-only refresh did not resolve it. Adding those peer packages to the development dependency graph and using Node 24/npm 11 consistently across local, Docker, and CI produced a successful clean image build. The backend image built with Java 21 and Maven. Compose first encountered a host-port conflict on 8081, so the documented default web port moved to 8088. A containerized seed run completed without changing the 10,000-row count; proxied health, directory, reports API, and direct Angular reports route returned successfully. The CI workflow is configured but has not yet run on a hosted GitHub runner.
+
+## Browser demo
+
+A Playwright-driven browser walkthrough exercises the deployed Angular flow against the seeded PostgreSQL instance: search for one employee, edit salary, and confirm the filtered report reflects the change. Its first recording timed out on an expected total before the UI had rendered the filtered response; the script now also asserts the persisted API value and report calculation, and waits for the visible total. The successful recording is committed as a short MP4. The script restores the original salary in a `finally` block, and a subsequent API read confirmed the original value. The database count remained 10,000.
