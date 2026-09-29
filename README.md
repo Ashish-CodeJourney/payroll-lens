@@ -35,7 +35,7 @@ The directory supports search, filters, paging, and local-currency display. Sele
 curl -X PATCH 'http://localhost:8088/api/employees/1/archive'
 ```
 
-The [short silent demo](docs/demo.mp4) shows a directory search, salary edit, and updated filtered report. To regenerate it from the running Compose stack, install Chrome and FFmpeg, then run `cd frontend && npm ci && npm run demo:record`. The script asserts the saved value and report result, then restores the seeded employee's original salary even if recording fails.
+The [captioned walkthrough](docs/demo.mp4) shows paging and filters, a salary edit, cross-currency reports and breakdowns, employee creation, archiving, and the read-only archived state at a reviewable pace. To regenerate it from the running Compose stack, install Chrome and FFmpeg, then run `cd frontend && npm ci && npm run demo:record`. The script asserts the saved value and report result, then restores the seeded employee's original salary and removes its temporary employee. It runs only against the local demo stack.
 
 ## Delivered behavior and next milestones
 
