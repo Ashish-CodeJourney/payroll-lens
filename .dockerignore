@@ -1,0 +1,11 @@
+.git
+.github
+.angular
+docs
+plans
+frontend/node_modules
+frontend/dist
+frontend/coverage
+backend/target
+*.dump
+*.mp4

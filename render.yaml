@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: payroll-lens
+    runtime: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/Ashish-CodeJourney/payroll-lens
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: APP_SEED
+        value: "true"
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx256m
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: payroll-lens-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: payroll-lens-db
+          property: port
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: payroll-lens-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: payroll-lens-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: payroll-lens-db
+          property: password
+
+databases:
+  - name: payroll-lens-db
+    databaseName: payroll_lens
+    user: payroll_lens
+    plan: free
+    region: singapore
+    ipAllowList: []
