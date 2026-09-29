@@ -4,7 +4,7 @@
 
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Live demo:** [payroll-lens.onrender.com](https://payroll-lens.onrender.com) · [API reference](https://payroll-lens.onrender.com/swagger-ui.html) · [demo video](docs/demo.mp4). Render hosts the Angular UI and Spring Boot API on one free web service, backed by free PostgreSQL. The free web service sleeps when idle, so the first visit can take time. The free database expires **October 29, 2026**; this is a temporary assessment demo, not durable hosting. See [Render deployment notes](docs/render-deployment.md).
+> **Live demo:** [payroll-lens.onrender.com](https://payroll-lens.onrender.com) · [API reference](https://payroll-lens.onrender.com/swagger-ui.html) · [playable demo video](https://ashish-codejourney.github.io/payroll-lens/). Render hosts the Angular UI and Spring Boot API on one free web service, backed by free PostgreSQL. The free web service sleeps when idle, so the first visit can take time. The free database expires **October 29, 2026**; this is a temporary assessment demo, not durable hosting. See [Render deployment notes](docs/render-deployment.md).
 
 ## Run the full app locally
 
@@ -35,7 +35,7 @@ The directory supports search, filters, paging, and local-currency display. Sele
 curl -X PATCH 'http://localhost:8088/api/employees/1/archive'
 ```
 
-The [captioned walkthrough](docs/demo.mp4) shows paging and filters, a salary edit, cross-currency reports and breakdowns, employee creation, archiving, and the read-only archived state at a reviewable pace. To regenerate it from the running Compose stack, install Chrome and FFmpeg, then run `cd frontend && npm ci && npm run demo:record`. The script asserts the saved value and report result, then restores the seeded employee's original salary and removes its temporary employee. It runs only against the local demo stack.
+The [captioned walkthrough](https://ashish-codejourney.github.io/payroll-lens/) shows paging and filters, a salary edit, cross-currency reports and breakdowns, employee creation, archiving, and the read-only archived state at a reviewable pace. To regenerate it from the running Compose stack, install Chrome and FFmpeg, then run `cd frontend && npm ci && npm run demo:record`. The script asserts the saved value and report result, then restores the seeded employee's original salary and removes its temporary employee. It runs only against the local demo stack.
 
 ## Delivered behavior and next milestones
 
@@ -46,7 +46,7 @@ The [captioned walkthrough](docs/demo.mp4) shows paging and filters, a salary ed
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
 | Angular UI | Responsive directory, employee create/edit/archive form, and filtered salary reports, with Angular Material navigation and cards. |
-| Deployment and demo | Local Compose stack, [live Render service](https://payroll-lens.onrender.com), [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36520346255), and [video walkthrough](docs/demo.mp4). The free database expires October 29, 2026; [VPS instructions](docs/vps-deployment.md) remain available. |
+| Deployment and demo | Local Compose stack, [live Render service](https://payroll-lens.onrender.com), [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36520346255), and [video walkthrough](https://ashish-codejourney.github.io/payroll-lens/). The free database expires October 29, 2026; [VPS instructions](docs/vps-deployment.md) remain available. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
 
