@@ -20,6 +20,8 @@ The following are excerpts from the actual instructions supplied in this session
 
 > “Once we create employee it's saving it but keeping me on same page with same values filled in form, and if we can not edit any values after archiving than why the form stays editable?”
 
+> “now connect render MCP https://render.com/docs/mcp-server and Host it on render (free)”
+
 The job description also specifies modern Angular with TypeScript, so this project uses current Angular rather than the legacy AngularJS 1.x framework. The repository's [working rules](../AGENTS.md) turn the TDD and trunk requirements into a repeatable workflow. No Spring Boot- or Angular-specific MCP integration was available during this work; the agent used local tools, tests, and code inspection. This file does not claim unrecorded AI prompts or reviews.
 
 ## How suggestions were checked
@@ -33,3 +35,5 @@ For API documentation, the agent checked springdoc's published Spring Boot compa
 For the UI refinement, the agent inspected live browser screenshots, wrote a browser layout check that failed on the reported search alignment, and expanded it only when further visual defects were observed. Angular interaction tests caught a removed accessible search name. The final layout was checked in the running container at multiple viewport widths and the video workflow was replayed, including its salary-restoration check. Visual judgment remained a human-reviewable part of this work; the layout assertions cover measurable regressions rather than attempting to encode appearance entirely in tests.
 
 For the create/archive follow-up, the agent used Angular tests for navigation and disabled controls, plus an HTTP test for the archive rule. Testing revealed that the backend still accepted edits to archived records, so the fix covers the API contract as well as the form. Selected mutations confirmed that the tests detect a missing navigation and a missing archive guard. A Chrome check against rebuilt containers verified the final routes and read-only fields without adding a test employee to the seeded database.
+
+For Render deployment, the agent checked Render's official MCP, CLI, Blueprint, and free-tier documentation. It connected the official Render MCP endpoint in Codex with OAuth; the current agent session did not expose the newly registered MCP tools, so the agent used the official authenticated Render CLI to create and inspect resources. It validated the committed Blueprint before resource creation, kept database credentials out of repository files and command output, and used local Docker and browser checks plus GitHub CI to assess the deployable image. The live resources were created through CLI, so the Blueprint is a reproducible topology reference rather than a claim of Blueprint management; [deployment notes](render-deployment.md) state this distinction and the free-tier expiry.

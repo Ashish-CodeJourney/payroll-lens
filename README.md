@@ -4,7 +4,7 @@
 
 Payroll Lens is an HR Manager application for maintaining ACME's current annual base salaries across 10,000 employees. It replaces spreadsheet lookup and editing with a searchable employee directory and will answer pay questions with currency-aware reports. All demo records are synthetic.
 
-> **Assessment status:** The Spring Boot API, PostgreSQL schema, deterministic 10,000-record seed, Angular workflow, local container deployment, passing [hosted CI run](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36419505641), and [demo video](docs/demo.mp4) are present. The public VPS deployment is left to the owner; the [VPS handoff](docs/vps-deployment.md) contains the exact steps. This status is deliberately explicit so reviewers can distinguish delivered behavior from the [product requirements](docs/requirements.md).
+> **Live demo:** [payroll-lens.onrender.com](https://payroll-lens.onrender.com) · [API reference](https://payroll-lens.onrender.com/swagger-ui.html) · [demo video](docs/demo.mp4). Render hosts the Angular UI and Spring Boot API on one free web service, backed by free PostgreSQL. The free web service sleeps when idle, so the first visit can take time. The free database expires **October 29, 2026**; this is a temporary assessment demo, not durable hosting. See [Render deployment notes](docs/render-deployment.md).
 
 ## Run the full app locally
 
@@ -14,7 +14,7 @@ With Docker and Compose installed, run from the repository root:
 make run
 ```
 
-Open `http://localhost:8088`. The web container serves Angular and proxies `/api` to Spring Boot. The database is mapped to localhost port `5433` and is not exposed publicly. Flyway applies the schema on startup. The seed command inserts the same 10,000 synthetic employees once and leaves existing rows intact on reruns. `WEB_PORT` can change the web host port; `POSTGRES_PASSWORD` can override the local demo default. For a public demo, follow the [VPS handoff](docs/vps-deployment.md).
+Open `http://localhost:8088`. The web container serves Angular and proxies `/api` to Spring Boot. The database is mapped to localhost port `5433` and is not exposed publicly. Flyway applies the schema on startup. The seed command inserts the same 10,000 synthetic employees once and leaves existing rows intact on reruns. `WEB_PORT` can change the web host port; `POSTGRES_PASSWORD` can override the local demo default. The [VPS handoff](docs/vps-deployment.md) provides a durable alternative to the temporary Render demo.
 
 Review the interactive API reference at `http://localhost:8088/swagger-ui.html` or fetch its OpenAPI JSON at `http://localhost:8088/v3/api-docs`. Both are served through the same web port as Angular. The reference documents employee management and active-pay reports; the [API contract](docs/api-contract.md) explains error and currency semantics in prose.
 
@@ -46,7 +46,7 @@ The [short silent demo](docs/demo.mp4) shows a directory search, salary edit, an
 | Demo data | Repeatable seed of 10,000 employees across five countries and currencies. |
 | Analytics | Active headcount, dated USD total and median, country/department/level breakdowns, and salary distribution through JSON API. |
 | Angular UI | Responsive directory, employee create/edit/archive form, and filtered salary reports, with Angular Material navigation and cards. |
-| Deployment and demo | Local Compose stack, [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36419505641), and [video walkthrough](docs/demo.mp4) are verified. [VPS instructions](docs/vps-deployment.md) are ready for the owner to publish the URL. |
+| Deployment and demo | Local Compose stack, [live Render service](https://payroll-lens.onrender.com), [passing CI](https://github.com/Ashish-CodeJourney/payroll-lens/actions/runs/36520346255), and [video walkthrough](docs/demo.mp4). The free database expires October 29, 2026; [VPS instructions](docs/vps-deployment.md) remain available. |
 
 Money is stored as annual gross base pay in each employee's local currency. Cross-country reports use USD with a fixed `2026-01-01` rate snapshot. Supported currencies and USD-per-unit factors are USD 1.00, EUR 1.10, GBP 1.25, INR 0.012, and CAD 0.74. These are deterministic demo assumptions, not market quotes; local values are never summed as if they share a currency.
 
@@ -72,6 +72,7 @@ Backend tests currently cover salary rules, persistence and uniqueness, seeding,
 - [AI collaboration record](docs/ai-workflow.md): prompts, verification, and responsibility for AI-assisted work.
 - [Development evidence](docs/development-log.md): test-first observations and mutation checks.
 - [VPS deployment handoff](docs/vps-deployment.md): self-hosting, HTTPS, verification, updates, and backup.
+- [Render deployment notes](docs/render-deployment.md): live resources, configuration, free-tier limits, and verification.
 - [Working rules](AGENTS.md): TDD, conventional commits, and trunk-based development.
 
 The project follows short, tested commits directly on `main`. The history starts with requirements, then scaffolding, domain rules, persistence, seed, and employee API slices. Each behavioral commit contains its tests; failing RED states are documented instead of committed to trunk.
